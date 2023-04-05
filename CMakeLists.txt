@@ -4,7 +4,7 @@ set(CMAKE_CXX_STANDARD 23)
 project(wxWidgets-samples)
 
 # wxWidgets
-set(wxWidgets_ROOT_DIR "C:/DevLibs/wxWidgets-3.2.1")
+set(wxWidgets_ROOT_DIR $ENV{WXWIDGETS_ROOT})
 find_package(wxWidgets REQUIRED COMPONENTS core base)
 include("${wxWidgets_USE_FILE}")
 # message("wxWidget_USE_FILE ${wxWidgets_USE_FILE}")
