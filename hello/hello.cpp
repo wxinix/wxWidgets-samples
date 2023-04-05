@@ -77,7 +77,9 @@ wxIMPLEMENT_APP(MyApp);
 
 bool MyApp::OnInit()
 {
+  wxApp::SetUseBestVisual(true);
   auto *frame = new MyFrame();
+  frame->SetClientSize(frame->FromDIP(wxSize(400, 300)));
   frame->Show(true);
   return true;
 }
