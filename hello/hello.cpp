@@ -14,7 +14,7 @@
 class MyApp : public wxApp
 {
 public:
-  bool OnInit() override;
+    bool OnInit() override;
 };
 
 /*
@@ -40,11 +40,12 @@ public:
 class MyFrame : public wxFrame
 {
 public:
-  MyFrame();
+    MyFrame();
+
 private:
-  void OnHello(wxCommandEvent &event);
-  void OnExit(wxCommandEvent &event);
-  void OnAbout(wxCommandEvent &event);
+    void OnHello(wxCommandEvent &event);
+    void OnExit(wxCommandEvent &event);
+    void OnAbout(wxCommandEvent &event);
 };
 
 /*
@@ -55,7 +56,7 @@ private:
  */
 enum
 {
-  ID_Hello = 1
+    ID_Hello = 1
 };
 
 /*
@@ -77,11 +78,11 @@ wxIMPLEMENT_APP(MyApp);
 
 bool MyApp::OnInit()
 {
-  wxApp::SetUseBestVisual(true);
-  auto *frame = new MyFrame();
-  frame->SetClientSize(frame->FromDIP(wxSize(400, 300)));
-  frame->Show(true);
-  return true;
+    wxApp::SetUseBestVisual(true);
+    auto *frame = new MyFrame();
+    frame->SetClientSize(frame->FromDIP(wxSize(400, 300)));
+    frame->Show(true);
+    return true;
 }
 
 /*
@@ -92,7 +93,7 @@ bool MyApp::OnInit()
 MyFrame::MyFrame() : wxFrame(nullptr, wxID_ANY, "Hello World", wxPoint(50, 50), wxSize(450, 340))
 {
 
-  /*
+    /*
    * Notice that we don't need to specify the labels for the standard menu
    * items wxID_ABOUT and wxID_EXIT — they will be given standard (even correctly translated)
    * labels and standard accelerators correct for the current platform, making
@@ -101,24 +102,24 @@ MyFrame::MyFrame() : wxFrame(nullptr, wxID_ANY, "Hello World", wxPoint(50, 50), 
    * For this reason, you should prefer reusing the standard ids
    * (see Stock Items) where possible.
    */
-  auto *menuFile = new wxMenu;
-  menuFile->Append(ID_Hello, "&Hello...\tCtrl-H", "Help string shown in status bar for this menu item");
-  menuFile->AppendSeparator();
-  menuFile->Append(wxID_EXIT); // didn't specify label.
+    auto *menuFile = new wxMenu;
+    menuFile->Append(ID_Hello, "&Hello...\tCtrl-H", "Help string shown in status bar for this menu item");
+    menuFile->AppendSeparator();
+    menuFile->Append(wxID_EXIT);// didn't specify label.
 
-  auto *menuHelp = new wxMenu;
-  menuHelp->Append(wxID_ABOUT); // didn't specify label.
+    auto *menuHelp = new wxMenu;
+    menuHelp->Append(wxID_ABOUT);// didn't specify label.
 
-  auto *menuBar = new wxMenuBar;
-  menuBar->Append(menuFile, "&File");
-  menuBar->Append(menuHelp, "&Help");
+    auto *menuBar = new wxMenuBar;
+    menuBar->Append(menuFile, "&File");
+    menuBar->Append(menuHelp, "&Help");
 
-  SetMenuBar(menuBar);
+    SetMenuBar(menuBar);
 
-  CreateStatusBar();
-  SetStatusText("Welcome to wxWidgets!");
+    CreateStatusBar();
+    SetStatusText("Welcome to wxWidgets!");
 
-  /*
+    /*
    We also have to connect our event handlers to the events we want to handle in them.
    We do this by calling Bind() to send all the menu events (identified by wxEVT_MENU event type)
    with the specified ID to the given function. The parameters we pass to Bind() are
@@ -134,25 +135,25 @@ MyFrame::MyFrame() : wxFrame(nullptr, wxID_ANY, "Hello World", wxPoint(50, 50), 
       the provided handler. This is mainly useful with menu items and rarely with
       other kinds of events.
    */
-  Bind(wxEVT_MENU, &MyFrame::OnHello, this, ID_Hello);
-  Bind(wxEVT_MENU, &MyFrame::OnAbout, this, wxID_ABOUT);
-  Bind(wxEVT_MENU, &MyFrame::OnExit, this, wxID_EXIT);
+    Bind(wxEVT_MENU, &MyFrame::OnHello, this, ID_Hello);
+    Bind(wxEVT_MENU, &MyFrame::OnAbout, this, wxID_ABOUT);
+    Bind(wxEVT_MENU, &MyFrame::OnExit, this, wxID_EXIT);
 
-  // Center();
+    // Center();
 }
 
 void MyFrame::OnExit(wxCommandEvent &)
 {
-  Close(true);
+    Close(true);
 }
 
 void MyFrame::OnAbout(wxCommandEvent &)
 {
-  wxMessageBox("This is a wxWidgets' Hello world sample",
-               "About Hello World", wxOK | wxICON_INFORMATION);
+    wxMessageBox("This is a wxWidgets' Hello world sample",
+                 "About Hello World", wxOK | wxICON_INFORMATION);
 }
 
 void MyFrame::OnHello(wxCommandEvent &)
 {
-  wxLogMessage("Hello world from wxWidgets!");
+    wxLogMessage("Hello world from wxWidgets!");
 }
