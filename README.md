@@ -57,9 +57,11 @@ This is an optional step because wxrc.exe is already supplied in the development
 
 - [Hello World](https://github.com/wxinix/wxWidgets-samples/tree/main/hello). For details, [read this article](https://docs.wxwidgets.org/latest/overview_helloworld.html).
 
-To test run the list of sample projects, remember to put the following paths on system path:
-- `C:\DevLibs\Cpp\wxWidgets-3.2.6\distrib\vc14x_x64_dll`. This is for RELEASE build.
-- `C:\DevLibs\Cpp\wxWidgets-3.2.6\lib\vc14x_x64_dll`. This is for DEBUG build.
+### Running the Samples
+
+To run the sample projects, ensure the following paths are added to your system `PATH` environment variable:
+- Release Build: `C:\DevLibs\Cpp\wxWidgets-3.2.6\distrib\vc14x_x64_dll`  
+- DebugBuild: `C:\DevLibs\Cpp\wxWidgets-3.2.6\lib\vc14x_x64_dll` 
 
 ## High DPI Support
  
