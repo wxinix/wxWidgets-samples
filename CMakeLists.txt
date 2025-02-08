@@ -23,4 +23,4 @@ add_subdirectory(minimal)
 add_subdirectory(widgets)
 add_subdirectory(notebook)
 add_subdirectory(dialogs)
-
+add_subdirectory(sashtest)
