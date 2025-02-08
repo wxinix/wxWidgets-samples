@@ -21,4 +21,5 @@ add_subdirectory(hello)
 add_subdirectory(access)
 add_subdirectory(minimal)
 add_subdirectory(widgets)
+add_subdirectory(notebook)
 
