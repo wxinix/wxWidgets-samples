@@ -1,13 +1,3 @@
-/////////////////////////////////////////////////////////////////////////////
-// Program:     wxWidgets Widgets Sample
-// Name:        samples/widgets/widgets.cpp
-// Purpose:     Sample showing most of the simple wxWidgets widgets
-// Author:      Vadim Zeitlin
-// Created:     27.03.01
-// Copyright:   (c) 2001 Vadim Zeitlin
-// Licence:     wxWindows licence
-/////////////////////////////////////////////////////////////////////////////
-
 // ============================================================================
 // declarations
 // ============================================================================
@@ -16,7 +6,7 @@
 // headers
 // ----------------------------------------------------------------------------
 
-// for compilers that support precompilation, includes "wx/wx.h".
+// for compilers that support pre-compilation, includes "wx/wx.h".
 #include "wx/wxprec.h"
 
 
@@ -139,7 +129,7 @@ public:
     WidgetsApp()
     {
 #if USE_LOG
-        m_logTarget = NULL;
+        m_logTarget = nullptr;
 #endif // USE_LOG
     }
 
@@ -149,7 +139,7 @@ public:
     // this one is called on application startup and is a good place for the app
     // initialization (doing it here and not in the ctor allows to have an error
     // return: if OnInit() returns false, the application terminates)
-    virtual bool OnInit() wxOVERRIDE;
+    bool OnInit() wxOVERRIDE;
 
     // real implementation of WidgetsPage method with the same name
     bool IsUsingLogWindow() const;
@@ -169,8 +159,8 @@ class WidgetsFrame : public wxFrame
 {
 public:
     // ctor(s) and dtor
-    WidgetsFrame(const wxString& title);
-    virtual ~WidgetsFrame();
+    explicit WidgetsFrame(const wxString& title);
+    ~WidgetsFrame() override;
 
 protected:
     // event handlers
@@ -215,7 +205,7 @@ protected:
 
     void OnUpdateTextUI(wxUpdateUIEvent& event)
     {
-        event.Enable( CurrentPage()->GetTextEntry() != NULL );
+        event.Enable( CurrentPage()->GetTextEntry() != nullptr );
     }
 #endif // wxUSE_MENUS
 
@@ -261,14 +251,14 @@ public:
         m_logOld = logOld;
     }
 
-    virtual ~LboxLogger()
+    ~LboxLogger() override
     {
         wxLog::SetActiveTarget(m_logOld);
     }
 
 private:
     // implement sink functions
-    virtual void DoLogTextAtLevel(wxLogLevel level, const wxString& msg) wxOVERRIDE
+    void DoLogTextAtLevel(wxLogLevel level, const wxString& msg) wxOVERRIDE
     {
         if ( level == wxLOG_Trace )
         {
@@ -281,7 +271,7 @@ private:
             m_lbox->AppendAndEnsureVisible(msg);
         #else // other ports don't have this method yet
             m_lbox->Append(msg);
-            m_lbox->SetFirstItem(m_lbox->GetCount() - 1);
+            m_lbox->SetFirstItem(static_cast<int>(m_lbox->GetCount() - 1));
         #endif
     }
 
@@ -300,7 +290,7 @@ WX_DEFINE_ARRAY_PTR(WidgetsPage *, ArrayWidgetsPage);
 // misc macros
 // ----------------------------------------------------------------------------
 
-wxIMPLEMENT_APP(WidgetsApp);
+wxIMPLEMENT_APP(WidgetsApp); // NOLINT(*-pro-type-static-cast-downcast)
 
 // ----------------------------------------------------------------------------
 // event tables
@@ -318,8 +308,7 @@ wxBEGIN_EVENT_TABLE(WidgetsFrame, wxFrame)
 
 #if wxUSE_MENUS
     EVT_WIDGETS_PAGE_CHANGING(wxID_ANY, WidgetsFrame::OnPageChanging)
-    EVT_MENU_RANGE(Widgets_GoToPage, Widgets_GoToPageLast,
-                   WidgetsFrame::OnGoToPage)
+    EVT_MENU_RANGE(Widgets_GoToPage, Widgets_GoToPageLast, WidgetsFrame::OnGoToPage)
 
     EVT_MENU(Widgets_SetFgColour, WidgetsFrame::OnSetFgCol)
     EVT_MENU(Widgets_SetBgColour, WidgetsFrame::OnSetBgCol)
@@ -337,7 +326,7 @@ wxBEGIN_EVENT_TABLE(WidgetsFrame, wxFrame)
     EVT_MENU(Widgets_LayoutDirection,   WidgetsFrame::OnToggleLayoutDirection)
 
     EVT_MENU(Widgets_GlobalBusyCursor,  WidgetsFrame::OnToggleGlobalBusyCursor)
-    EVT_MENU(Widgets_BusyCursor,        WidgetsFrame::OnToggleBusyCursor)
+    EVT_MENU(Widgets_BusyCursor, WidgetsFrame::OnToggleBusyCursor)
 
     EVT_MENU(TextEntry_DisableAutoComplete,   WidgetsFrame::OnDisableAutoComplete)
     EVT_MENU(TextEntry_AutoCompleteFixed,     WidgetsFrame::OnAutoCompleteFixed)
@@ -347,10 +336,7 @@ wxBEGIN_EVENT_TABLE(WidgetsFrame, wxFrame)
     EVT_MENU(TextEntry_AutoCompleteKeyLength, WidgetsFrame::OnAutoCompleteKeyLength)
 
     EVT_MENU(TextEntry_SetHint, WidgetsFrame::OnSetHint)
-
-    EVT_UPDATE_UI_RANGE(TextEntry_Begin, TextEntry_End - 1,
-                        WidgetsFrame::OnUpdateTextUI)
-
+    EVT_UPDATE_UI_RANGE(TextEntry_Begin, TextEntry_End - 1, WidgetsFrame::OnUpdateTextUI)
     EVT_MENU(wxID_EXIT, WidgetsFrame::OnExit)
 #endif // wxUSE_MENUS
 wxEND_EVENT_TABLE()
@@ -371,7 +357,7 @@ bool WidgetsApp::OnInit()
     SetVendorName("wxWidgets_Samples");
 
     // the reason for having these ifdef's is that I often run two copies of
-    // this sample side by side and it is useful to see which one is which
+    // this sample side by side, and it is useful to see which one is which
     wxString title;
 #if defined(__WXUNIVERSAL__)
     title = "wxUniv/";
@@ -412,23 +398,22 @@ bool WidgetsApp::IsUsingLogWindow() const
 // WidgetsFrame construction
 // ----------------------------------------------------------------------------
 
-WidgetsFrame::WidgetsFrame(const wxString& title)
-            : wxFrame(NULL, wxID_ANY, title)
+WidgetsFrame::WidgetsFrame(const wxString& title) : wxFrame(nullptr, wxID_ANY, title)
 {
     // set the frame icon
     SetIcon(wxICON(sample));
 
     // init everything
 #if USE_LOG
-    m_lboxLog = NULL;
-    m_logTarget = NULL;
+    m_lboxLog = nullptr;
+    m_logTarget = nullptr;
 #endif // USE_LOG
-    m_book = NULL;
+    m_book = nullptr;
 
 #if wxUSE_MENUS
     // create the menubar
-    wxMenuBar *mbar = new wxMenuBar;
-    wxMenu *menuWidget = new wxMenu;
+    auto *menuBar = new wxMenuBar;
+    auto *menuWidget = new wxMenu;
 #if wxUSE_TOOLTIPS
     menuWidget->Append(Widgets_SetTooltip, "Set &tooltip...\tCtrl-T");
     menuWidget->AppendSeparator();
@@ -440,7 +425,7 @@ WidgetsFrame::WidgetsFrame(const wxString& title)
     menuWidget->AppendCheckItem(Widgets_Enable,  "&Enable/disable\tCtrl-E");
     menuWidget->AppendCheckItem(Widgets_Show, "Show/Hide");
 
-    wxMenu *menuBorders = new wxMenu;
+    auto *menuBorders = new wxMenu;
     menuBorders->AppendRadioItem(Widgets_BorderDefault, "De&fault\tCtrl-Shift-9");
     menuBorders->AppendRadioItem(Widgets_BorderNone,   "&None\tCtrl-Shift-0");
     menuBorders->AppendRadioItem(Widgets_BorderSimple, "&Simple\tCtrl-Shift-1");
@@ -450,7 +435,7 @@ WidgetsFrame::WidgetsFrame(const wxString& title)
     menuBorders->AppendRadioItem(Widgets_BorderSunken, "S&unken\tCtrl-Shift-5");
     menuWidget->AppendSubMenu(menuBorders, "Set &border");
 
-    wxMenu* const menuVariants = new wxMenu;
+    auto* const menuVariants = new wxMenu;
     menuVariants->AppendRadioItem(Widgets_VariantMini, "&Mini\tCtrl-Shift-6");
     menuVariants->AppendRadioItem(Widgets_VariantSmall, "&Small\tCtrl-Shift-7");
     menuVariants->AppendRadioItem(Widgets_VariantNormal, "&Normal\tCtrl-Shift-8");
@@ -458,45 +443,35 @@ WidgetsFrame::WidgetsFrame(const wxString& title)
     menuWidget->AppendSubMenu(menuVariants, "Set &variant");
 
     menuWidget->AppendSeparator();
-    menuWidget->AppendCheckItem(Widgets_LayoutDirection,
-                                "Toggle &layout direction\tCtrl-L");
-    menuWidget->Check(Widgets_LayoutDirection,
-                      GetLayoutDirection() == wxLayout_RightToLeft);
+    menuWidget->AppendCheckItem(Widgets_LayoutDirection, "Toggle &layout direction\tCtrl-L");
+    menuWidget->Check(Widgets_LayoutDirection, GetLayoutDirection() == wxLayout_RightToLeft);
 
     menuWidget->AppendSeparator();
-    menuWidget->AppendCheckItem(Widgets_GlobalBusyCursor,
-                                "Toggle &global busy cursor\tCtrl-Shift-U");
-    menuWidget->AppendCheckItem(Widgets_BusyCursor,
-                                "Toggle b&usy cursor\tCtrl-U");
+    menuWidget->AppendCheckItem(Widgets_GlobalBusyCursor, "Toggle &global busy cursor\tCtrl-Shift-U");
+    menuWidget->AppendCheckItem(Widgets_BusyCursor, "Toggle b&usy cursor\tCtrl-U");
 
     menuWidget->AppendSeparator();
     menuWidget->Append(wxID_EXIT, "&Quit\tCtrl-Q");
-    mbar->Append(menuWidget, "&Widget");
+    menuBar->Append(menuWidget, "&Widget");
 
-    wxMenu *menuTextEntry = new wxMenu;
-    menuTextEntry->AppendRadioItem(TextEntry_DisableAutoComplete,
-                                   "&Disable auto-completion");
-    menuTextEntry->AppendRadioItem(TextEntry_AutoCompleteFixed,
-                                   "Fixed-&list auto-completion");
-    menuTextEntry->AppendRadioItem(TextEntry_AutoCompleteFilenames,
-                                   "&Files names auto-completion");
-    menuTextEntry->AppendRadioItem(TextEntry_AutoCompleteDirectories,
-                                   "&Directories names auto-completion");
-    menuTextEntry->AppendRadioItem(TextEntry_AutoCompleteCustom,
-                                   "&Custom auto-completion");
-    menuTextEntry->AppendRadioItem(TextEntry_AutoCompleteKeyLength,
-                                   "Custom with &min length");
+    auto *menuTextEntry = new wxMenu;
+    menuTextEntry->AppendRadioItem(TextEntry_DisableAutoComplete, "&Disable auto-completion");
+    menuTextEntry->AppendRadioItem(TextEntry_AutoCompleteFixed, "Fixed-&list auto-completion");
+    menuTextEntry->AppendRadioItem(TextEntry_AutoCompleteFilenames, "&Files names auto-completion");
+    menuTextEntry->AppendRadioItem(TextEntry_AutoCompleteDirectories, "&Directories names auto-completion");
+    menuTextEntry->AppendRadioItem(TextEntry_AutoCompleteCustom,  "&Custom auto-completion");
+    menuTextEntry->AppendRadioItem(TextEntry_AutoCompleteKeyLength,  "Custom with &min length");
     menuTextEntry->AppendSeparator();
     menuTextEntry->Append(TextEntry_SetHint, "Set help &hint");
 
-    mbar->Append(menuTextEntry, "&Text");
+    menuBar->Append(menuTextEntry, "&Text");
 
-    SetMenuBar(mbar);
+    SetMenuBar(menuBar);
 
-    mbar->Check(Widgets_Enable, true);
-    mbar->Check(Widgets_Show, true);
+    menuBar->Check(Widgets_Enable, true);
+    menuBar->Check(Widgets_Show, true);
 
-    mbar->Check(Widgets_VariantNormal, true);
+    menuBar->Check(Widgets_VariantNormal, true);
 #endif // wxUSE_MENUS
 
     // create controls
@@ -511,26 +486,22 @@ WidgetsFrame::WidgetsFrame(const wxString& title)
     // Uncomment to suppress page theme (draw in solid colour)
     //style |= wxNB_NOPAGETHEME;
 
-    m_book = new WidgetsBookCtrl(m_panel, Widgets_BookCtrl,
-                                 wxDefaultPosition, wxDefaultSize,
-                                 style, "Widgets");
+    m_book = new WidgetsBookCtrl(m_panel, Widgets_BookCtrl, wxDefaultPosition, wxDefaultSize,  style, "Widgets");
 
     InitBook();
 
     // the lower one only has the log listbox and a button to clear it
 #if USE_LOG
-    wxSizer *sizerDown = new wxStaticBoxSizer(
-        new wxStaticBox( m_panel, wxID_ANY, "&Log window" ),
-        wxVERTICAL);
+    wxSizer *sizerDown = new wxStaticBoxSizer(new wxStaticBox( m_panel, wxID_ANY, "&Log window" ), wxVERTICAL);
 
     m_lboxLog = new wxListBox(m_panel, wxID_ANY);
     sizerDown->Add(m_lboxLog, wxSizerFlags(1).Expand().Border());
-    sizerDown->SetMinSize(100, 150);
+    sizerDown->SetMinSize(100, 350);
 #else
     wxSizer *sizerDown = new wxBoxSizer(wxVERTICAL);
 #endif // USE_LOG
 
-    wxBoxSizer *sizerBtns = new wxBoxSizer(wxHORIZONTAL);
+    auto *sizerBtns = new wxBoxSizer(wxHORIZONTAL);
     wxButton *btn;
 #if USE_LOG
     btn = new wxButton(m_panel, Widgets_ClearLog, "Clear &log");
@@ -565,7 +536,7 @@ WidgetsFrame::WidgetsFrame(const wxString& title)
 
 void WidgetsFrame::InitBook()
 {
-    wxImageList *imageList = new wxImageList(ICON_SIZE, ICON_SIZE);
+    auto *imageList = new wxImageList(ICON_SIZE, ICON_SIZE);
 
     wxImage img(sample_xpm);
     imageList->Add(wxBitmap(img.Scale(ICON_SIZE, ICON_SIZE)));
@@ -577,7 +548,7 @@ void WidgetsFrame::InitBook()
     ArrayWidgetsPage pages[MAX_PAGES];
     wxArrayString labels[MAX_PAGES];
 
-    wxMenu *menuPages = new wxMenu;
+    auto *menuPages = new wxMenu;
     unsigned int nPage = 0;
     int cat, imageId = 1;
 
@@ -617,7 +588,7 @@ void WidgetsFrame::InitBook()
             if ( cat == ALL_PAGE )
             {
                 menuPages->AppendRadioItem(
-                            Widgets_GoToPage + nPage,
+                            static_cast<int>(Widgets_GoToPage + nPage),
                             info->GetLabel()
                            );
 #if !USE_TREEBOOK
@@ -640,7 +611,7 @@ void WidgetsFrame::InitBook()
     for ( cat = 0; cat < MAX_PAGES; cat++ )
     {
 #if USE_TREEBOOK
-        m_book->AddPage(NULL,WidgetsCategories[cat],false,0);
+        m_book->AddPage(nullptr,WidgetsCategories[cat],false,0);
 #else
         m_book->AddPage(books[cat],WidgetsCategories[cat],false,0);
         books[cat]->SetImageList(imageList);
@@ -708,11 +679,8 @@ void WidgetsFrame::ConnectToWidgetEvents()
 {
     const Widgets& widgets = CurrentPage()->GetWidgets();
 
-    for ( Widgets::const_iterator it = widgets.begin();
-            it != widgets.end();
-            ++it )
+    for (auto w : widgets)
     {
-        wxWindow* const w = *it;
         wxCHECK_RET(w, "NULL widget");
 
         w->Bind(wxEVT_SET_FOCUS, &WidgetsFrame::OnWidgetFocus, this);
@@ -826,7 +794,7 @@ namespace
 
 // Trivial wrapper for wxGetColourFromUser() which also does something even if
 // the colour dialog is not available in the current build (which may happen
-// for the ports in development and it is still useful to see how colours work)
+// for the ports in development, and it is still useful to see how colours work)
 wxColour GetColourFromUser(wxWindow *parent, const wxColour& colDefault)
 {
 #if wxUSE_COLOURDLG
@@ -987,7 +955,7 @@ void WidgetsFrame::OnToggleLayoutDirection(wxCommandEvent&)
     CurrentPage()->SetUpWidget();
 }
 
-void WidgetsFrame::OnToggleGlobalBusyCursor(wxCommandEvent& event)
+void WidgetsFrame::OnToggleGlobalBusyCursor(wxCommandEvent& event) // NOLINT(*-convert-member-functions-to-static)
 {
     if ( event.IsChecked() )
         wxBeginBusyCursor();
@@ -1088,9 +1056,9 @@ void WidgetsFrame::DoUseCustomAutoComplete(size_t minLength)
     // completer class that completes the first word (only) initially and only
     // build the list of the possible second words once the first word is
     // known. This allows to avoid building the full 676000 item list of
-    // possible strings all at once as the we have 1000 possibilities for the
-    // first word (000..999) and 676 (aa..zz) for the second one.
-    class CustomTextCompleter : public wxTextCompleterSimple
+    // possible strings all at once as we have 1000 possibilities for the
+    // first word (000..999) and 676 (aa...zz) for the second one.
+    class [[maybe_unused]] CustomTextCompleter : public wxTextCompleterSimple
     {
     public:
         explicit CustomTextCompleter(size_t minLength)
@@ -1098,7 +1066,7 @@ void WidgetsFrame::DoUseCustomAutoComplete(size_t minLength)
         {
         }
 
-        virtual void GetCompletions(const wxString& prefix, wxArrayString& res) wxOVERRIDE
+        void GetCompletions(const wxString& prefix, wxArrayString& res) wxOVERRIDE
         {
             // This is used for illustrative purposes only and shows how many
             // completions we return every time when we're called.
@@ -1235,13 +1203,13 @@ void WidgetsFrame::OnSetHint(wxCommandEvent& WXUNUSED(event))
 
 #endif // wxUSE_MENUS
 
-void WidgetsFrame::OnWidgetFocus(wxFocusEvent& event)
+void WidgetsFrame::OnWidgetFocus(wxFocusEvent& event) // NOLINT(*-convert-member-functions-to-static)
 {
     // Don't show annoying message boxes when starting or closing the sample,
     // only log these events in our own logger.
     if ( wxGetApp().IsUsingLogWindow() )
     {
-        wxWindow* win = (wxWindow*)event.GetEventObject();
+        auto* win = (wxWindow*)event.GetEventObject();
         wxLogMessage("Widget '%s' %s focus", win->GetClassInfo()->GetClassName(),
                      event.GetEventType() == wxEVT_SET_FOCUS ? "got" : "lost");
     }
@@ -1249,9 +1217,9 @@ void WidgetsFrame::OnWidgetFocus(wxFocusEvent& event)
     event.Skip();
 }
 
-void WidgetsFrame::OnWidgetContextMenu(wxContextMenuEvent& event)
+void WidgetsFrame::OnWidgetContextMenu(wxContextMenuEvent& event) // NOLINT(*-convert-member-functions-to-static)
 {
-    wxWindow* win = (wxWindow*)event.GetEventObject();
+    auto* win = (wxWindow*)event.GetEventObject();
     wxLogMessage("Context menu event for %s at %dx%d",
                  win->GetClassInfo()->GetClassName(),
                  event.GetPosition().x,
@@ -1270,7 +1238,7 @@ WidgetsPageInfo::WidgetsPageInfo(Constructor ctor, const wxString& label, int ca
 {
     m_ctor = ctor;
 
-    m_next = NULL;
+    m_next = nullptr;
 
     // dummy sorting: add and immediately sort in the list according to label
     if ( WidgetsPage::ms_widgetPages )
@@ -1296,7 +1264,7 @@ WidgetsPageInfo::WidgetsPageInfo(Constructor ctor, const wxString& label, int ca
                         node_prev->SetNext(this);
                         m_next = node_next;
                         // force to break loop
-                        node_next = NULL;
+                        node_next = nullptr;
                     }
                 }
                 else
@@ -1321,17 +1289,17 @@ WidgetsPageInfo::WidgetsPageInfo(Constructor ctor, const wxString& label, int ca
 // WidgetsPage
 // ----------------------------------------------------------------------------
 
-WidgetsPageInfo *WidgetsPage::ms_widgetPages = NULL;
+WidgetsPageInfo *WidgetsPage::ms_widgetPages = nullptr;
 
 WidgetsPage::WidgetsPage(WidgetsBookCtrl *book,
-                         wxImageList *imaglist,
+                         wxImageList *imageList,
                          const char *const icon[])
            : wxPanel(book, wxID_ANY,
                      wxDefaultPosition, wxDefaultSize,
                      wxCLIP_CHILDREN |
                      wxTAB_TRAVERSAL)
 {
-    imaglist->Add(wxBitmap(wxImage(icon).Scale(ICON_SIZE, ICON_SIZE)));
+    imageList->Add(wxBitmap(wxImage(icon).Scale(ICON_SIZE, ICON_SIZE)));
 }
 
 /* static */
@@ -1346,41 +1314,39 @@ void WidgetsPage::SetUpWidget()
 {
     const Widgets widgets = GetWidgets();
 
-    for ( Widgets::const_iterator it = widgets.begin();
-            it != widgets.end();
-            ++it )
+    for (auto widget : widgets)
     {
-        wxCHECK_RET(*it, "NULL widget");
+        wxCHECK_RET(widget, "NULL widget");
 
 #if wxUSE_TOOLTIPS
-        (*it)->SetToolTip(GetAttrs().m_tooltip);
+        widget->SetToolTip(GetAttrs().m_tooltip);
 #endif // wxUSE_TOOLTIPS
 #if wxUSE_FONTDLG
         if ( GetAttrs().m_font.IsOk() )
         {
-            (*it)->SetFont(GetAttrs().m_font);
+            widget->SetFont(GetAttrs().m_font);
         }
 #endif // wxUSE_FONTDLG
         if ( GetAttrs().m_colFg.IsOk() )
         {
-            (*it)->SetForegroundColour(GetAttrs().m_colFg);
+            widget->SetForegroundColour(GetAttrs().m_colFg);
         }
 
         if ( GetAttrs().m_colBg.IsOk() )
         {
-            (*it)->SetBackgroundColour(GetAttrs().m_colBg);
+            widget->SetBackgroundColour(GetAttrs().m_colBg);
         }
 
         if (GetAttrs().m_dir != wxLayout_Default)
-            (*it)->SetLayoutDirection(GetAttrs().m_dir);
-        (*it)->Enable(GetAttrs().m_enabled);
-        (*it)->Show(GetAttrs().m_show);
+            widget->SetLayoutDirection(GetAttrs().m_dir);
+        widget->Enable(GetAttrs().m_enabled);
+        widget->Show(GetAttrs().m_show);
 
-        (*it)->SetCursor(GetAttrs().m_cursor);
+        widget->SetCursor(GetAttrs().m_cursor);
 
-        (*it)->SetWindowVariant(GetAttrs().m_variant);
+        widget->SetWindowVariant(GetAttrs().m_variant);
 
-        (*it)->Refresh();
+        widget->Refresh();
     }
 
     if ( GetAttrs().m_colPageBg.IsOk() )
@@ -1395,8 +1361,7 @@ wxSizer *WidgetsPage::CreateSizerWithText(wxControl *control,
                                           wxTextCtrl **ppText)
 {
     wxSizer *sizerRow = new wxBoxSizer(wxHORIZONTAL);
-    wxTextCtrl *text = new wxTextCtrl(this, id, wxEmptyString,
-        wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
+    auto *text = new wxTextCtrl(this, id, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
 
     sizerRow->Add(control, wxSizerFlags(0).Border(wxRIGHT).CentreVertical());
     sizerRow->Add(text, wxSizerFlags(1).Border(wxLEFT).CentreVertical());
@@ -1429,7 +1394,7 @@ wxCheckBox *WidgetsPage::CreateCheckBoxAndAddToSizer(wxSizer *sizer,
                                                      const wxString& label,
                                                      wxWindowID id)
 {
-    wxCheckBox *checkbox = new wxCheckBox(this, id, label);
+    auto *checkbox = new wxCheckBox(this, id, label);
     sizer->Add(checkbox, wxSizerFlags().HorzBorder());
     sizer->AddSpacer(2);
 

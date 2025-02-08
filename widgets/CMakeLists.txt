@@ -1,40 +1,9 @@
 project(widgets)
-set(SRC_FILES
-        activityindicator.cpp
-        bmpcombobox.cpp
-        button.cpp
-        checkbox.cpp
-        choice.cpp
-        clrpicker.cpp
-        combobox.cpp
-        datepick.cpp
-        dirctrl.cpp
-        dirpicker.cpp
-        editlbox.cpp
-        filectrl.cpp
-        filepicker.cpp
-        fontpicker.cpp
-        gauge.cpp
-        headerctrl.cpp
-        hyperlnk.cpp
-        itemcontainer.cpp
-        listbox.cpp
-        native.cpp
-        notebook.cpp
-        odcombobox.cpp
-        radiobox.cpp
-        searchctrl.cpp
-        slider.cpp
-        spinbtn.cpp
-        static.cpp
-        statbmp.cpp
-        textctrl.cpp
-        timepick.cpp
-        toggle.cpp
-        widgets.cpp)
+file(GLOB_RECURSE SRC_FILES "src/*.cpp")
 
 add_executable(${PROJECT_NAME} WIN32 ${SRC_FILES})
 target_link_libraries(${PROJECT_NAME} ${wxWidgets_LIBRARIES})
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_DIR}/)
 
 if (WIN32)
     if(wxUSE_DPI_AWARE_MANIFEST EQUAL 1)
