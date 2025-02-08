@@ -5,8 +5,7 @@ project(minimal)
 # Define a variable containing a list of source files for the project
 set(SRC_FILES
     minimal.cpp
-    sample.rc
-    )
+    ${CMAKE_SOURCE_DIR}/sample.rc)
 
 # Define the build target for the executable
 add_executable(${PROJECT_NAME} WIN32 ${SRC_FILES})
