@@ -64,7 +64,7 @@ enum
  * the wxIMPLEMENT_APP() macro, which creates an application instance of the
  * specified class and starts running the GUI event loop.
  */
-wxIMPLEMENT_APP(MyApp);
+wxIMPLEMENT_APP(MyApp); // NOLINT(*-pro-type-static-cast-downcast)
 
 /*
  * wxApp::OnInit() is called upon startup and should be used to initialize the
@@ -81,10 +81,11 @@ bool MyApp::OnInit()
     wxApp::SetUseBestVisual(true);
     auto *frame = new MyFrame();
     frame->SetClientSize(frame->FromDIP(wxSize(400, 300)));
-    frame->Show(true);
-    return true;
+    return frame->Show(true);
 }
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "VirtualCallInCtorOrDtor"
 /*
  * In the constructor of the main window (or later on), we create a menu with
  * our menu items, as well as a status bar to be shown at the bottom of
@@ -93,7 +94,7 @@ bool MyApp::OnInit()
 MyFrame::MyFrame() : wxFrame(nullptr, wxID_ANY, "Hello World", wxPoint(50, 50), wxSize(450, 340))
 {
 
-    /*
+  /*
    * Notice that we don't need to specify the labels for the standard menu
    * items wxID_ABOUT and wxID_EXIT — they will be given standard (even correctly translated)
    * labels and standard accelerators correct for the current platform, making
@@ -119,7 +120,7 @@ MyFrame::MyFrame() : wxFrame(nullptr, wxID_ANY, "Hello World", wxPoint(50, 50), 
     CreateStatusBar();
     SetStatusText("Welcome to wxWidgets!");
 
-    /*
+   /*
    We also have to connect our event handlers to the events we want to handle in them.
    We do this by calling Bind() to send all the menu events (identified by wxEVT_MENU event type)
    with the specified ID to the given function. The parameters we pass to Bind() are
@@ -141,19 +142,20 @@ MyFrame::MyFrame() : wxFrame(nullptr, wxID_ANY, "Hello World", wxPoint(50, 50), 
 
     // Center();
 }
+#pragma clang diagnostic pop
 
 void MyFrame::OnExit(wxCommandEvent &)
 {
     Close(true);
 }
 
-void MyFrame::OnAbout(wxCommandEvent &)
+void MyFrame::OnAbout(wxCommandEvent &) // NOLINT(*-convert-member-functions-to-static)
 {
     wxMessageBox("This is a wxWidgets' Hello world sample",
                  "About Hello World", wxOK | wxICON_INFORMATION);
 }
 
-void MyFrame::OnHello(wxCommandEvent &)
+void MyFrame::OnHello(wxCommandEvent &) // NOLINT(*-convert-member-functions-to-static)
 {
     wxLogMessage("Hello world from wxWidgets!");
 }
