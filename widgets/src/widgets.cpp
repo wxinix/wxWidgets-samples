@@ -647,6 +647,7 @@ void WidgetsFrame::InitBook()
 
     // but ensure that the top of the tree is shown nevertheless
     wxTreeCtrl * const tree = m_book->GetTreeCtrl();
+    tree->SetMinSize(wxSize(350, -1));
 
     wxTreeItemIdValue cookie;
     tree->EnsureVisible(tree->GetFirstChild(tree->GetRootItem(), cookie));
