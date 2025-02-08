@@ -19,4 +19,6 @@ message("wxUSE_DPI_AWARE_MANIFEST is set to ${wxUSE_DPI_AWARE_MANIFEST}")
 # Add sub directories of various samples.
 add_subdirectory(hello)
 add_subdirectory(access)
+add_subdirectory(minimal)
+add_subdirectory(widgets)
 
