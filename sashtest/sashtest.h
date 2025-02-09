@@ -1,76 +1,68 @@
-/////////////////////////////////////////////////////////////////////////////
-// Name:        sashtest.h
-// Purpose:     Layout window/sash sample
-// Author:      Julian Smart
-// Modified by:
-// Created:     04/01/98
-// Copyright:   (c) Julian Smart
-// Licence:     wxWindows licence
-/////////////////////////////////////////////////////////////////////////////
 
 #include "wx/toolbar.h"
 
 // Define a new application
-class MyApp: public wxApp
+class MyApp : public wxApp
 {
-  public:
-    bool OnInit(void) wxOVERRIDE;
+public:
+    bool OnInit() wxOVERRIDE;
 };
 
-class MyCanvas: public wxScrolledWindow
+class MyCanvas : public wxScrolledWindow
 {
-  public:
-    MyCanvas(wxWindow *parent, const wxPoint& pos, const wxSize& size);
-    virtual void OnDraw(wxDC& dc) wxOVERRIDE;
-    void OnEvent(wxMouseEvent& event);
+public:
+    MyCanvas(wxWindow *parent, const wxPoint &pos, const wxSize &size);
 
-    wxDECLARE_EVENT_TABLE();
+private:
+    void OnDraw(wxDC &dc) wxOVERRIDE;
+    void OnMouseEvent(wxMouseEvent &event);
 };
 
 // Define a new frame
-class MyFrame: public wxMDIParentFrame
+class MyFrame : public wxMDIParentFrame
 {
-  public:
-
-    MyFrame(wxWindow *parent, const wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, const long style);
-
-    void OnSize(wxSizeEvent& event);
-    void OnAbout(wxCommandEvent& event);
-    void OnNewWindow(wxCommandEvent& event);
-    void OnQuit(wxCommandEvent& event);
-    void OnToggleWindow(wxCommandEvent& event);
-    void OnSashDrag(wxSashEvent& event);
+public:
+    MyFrame(wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &pos, const wxSize &size, long style);
 
 protected:
-    wxSashLayoutWindow* m_topWindow;
-    wxSashLayoutWindow* m_leftWindow1;
-    wxSashLayoutWindow* m_leftWindow2;
-    wxSashLayoutWindow* m_bottomWindow;
+    wxSashLayoutWindow *m_topWindow;
+    wxSashLayoutWindow *m_leftWindow1;
+    wxSashLayoutWindow *m_leftWindow2;
+    wxSashLayoutWindow *m_bottomWindow;
 
-    wxDECLARE_EVENT_TABLE();
+private:
+    void OnMyFrameSize([[maybe_unused]] wxSizeEvent &event);
+    void OnAbout(wxCommandEvent &event);
+    void OnNewWindow(wxCommandEvent &event);
+    void OnQuit(wxCommandEvent &event);
+    void OnToggleWindow(wxCommandEvent &event);
+    void OnSashDrag(wxSashEvent &event);
 };
 
-class MyChild: public wxMDIChildFrame
+class MyChild : public wxMDIChildFrame
 {
-  public:
-    MyCanvas *canvas;
-    MyChild(wxMDIParentFrame *parent, const wxString& title, const wxPoint& pos, const wxSize& size);
-    ~MyChild(void);
-    void OnActivate(wxActivateEvent& event);
-    void OnQuit(wxCommandEvent& event);
+public:
+    MyChild(wxMDIParentFrame *parent, const wxString &title, const wxPoint &pos, const wxSize &size);
+    ~MyChild() override;
 
-    wxDECLARE_EVENT_TABLE();
+    [[nodiscard]] MyCanvas *GetCanvas() const { return m_canvas; }
+    void SetCanvas(MyCanvas *canvas) { m_canvas = canvas; }
+
+private:
+    [[maybe_unused]] void OnMyChildActivate(wxActivateEvent &event) const;
+    void OnQuit(wxCommandEvent &event);
+
+    MyCanvas *m_canvas{nullptr};
 };
 
-#define SASHTEST_QUIT        wxID_EXIT
-#define SASHTEST_NEW_WINDOW  2
-#define SASHTEST_REFRESH     3
-#define SASHTEST_CHILD_QUIT  4
-#define SASHTEST_ABOUT       wxID_ABOUT
+#define SASHTEST_QUIT wxID_EXIT
+#define SASHTEST_NEW_WINDOW 2
+#define SASHTEST_REFRESH 3
+#define SASHTEST_CHILD_QUIT 4
+#define SASHTEST_ABOUT wxID_ABOUT
 #define SASHTEST_TOGGLE_WINDOW 6
 
-#define ID_WINDOW_TOP       100
-#define ID_WINDOW_LEFT1     101
-#define ID_WINDOW_LEFT2     102
-#define ID_WINDOW_BOTTOM    103
-
+#define ID_WINDOW_TOP 100
+#define ID_WINDOW_LEFT1 101
+#define ID_WINDOW_LEFT2 102
+#define ID_WINDOW_BOTTOM 103
