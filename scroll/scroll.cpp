@@ -1,16 +1,15 @@
 #include "wx/wxprec.h"
 
-
 #ifndef WX_PRECOMP
-    #include "wx/wx.h"
+#include "wx/wx.h"
 #endif
 
-#include "wx/sizer.h"
 #include "wx/log.h"
+#include "wx/sizer.h"
 #include "wx/tglbtn.h"
 
 #ifndef wxHAS_IMAGES_IN_RESOURCES
-    #include "../sample.xpm"
+#include "../sample.xpm"
 #endif
 
 // ----------------------------------------------------------------------------
@@ -30,18 +29,17 @@ public:
         HEIGHT = 297
     };
 
-    MySimpleCanvas(wxWindow *parent)
-        : wxScrolled<wxWindow>(parent, wxID_ANY)
+    explicit MySimpleCanvas(wxWindow *parent) : wxScrolled<wxWindow>(parent, wxID_ANY)
     {
-        SetScrollRate( 10, 10 );
-        SetVirtualSize( WIDTH, HEIGHT );
-        SetBackgroundColour( *wxWHITE );
+        SetScrollRate(10, 10);
+        SetVirtualSize(WIDTH, HEIGHT);
+        SetBackgroundColour(*wxWHITE);
 
         Bind(wxEVT_PAINT, &MySimpleCanvas::OnPaint, this);
     }
 
 private:
-    void OnPaint(wxPaintEvent& WXUNUSED(event))
+    void OnPaint(wxPaintEvent &WXUNUSED(event))
     {
         wxPaintDC dc(this);
 
@@ -49,25 +47,21 @@ private:
         // scroll offset
         PrepareDC(dc);
 
-        dc.SetPen( *wxRED_PEN );
-        dc.SetBrush( *wxTRANSPARENT_BRUSH );
-        dc.DrawRectangle( 0, 0, WIDTH, HEIGHT );
+        dc.SetPen(*wxRED_PEN);
+        dc.SetBrush(*wxTRANSPARENT_BRUSH);
+        dc.DrawRectangle(0, 0, WIDTH, HEIGHT);
     }
 };
-
 
 // MySimpleFrame: a frame which contains a MySimpleCanvas
 class MySimpleFrame : public wxFrame
 {
 public:
-    MySimpleFrame(wxWindow *parent)
-        : wxFrame(parent, wxID_ANY, "MySimpleCanvas")
+    explicit MySimpleFrame(wxWindow *parent) : wxFrame(parent, wxID_ANY, "MySimpleCanvas")
     {
         new MySimpleCanvas(this);
-
         // ensure that we have scrollbars initially
-        SetClientSize(MySimpleCanvas::WIDTH/2, MySimpleCanvas::HEIGHT/2);
-
+        SetClientSize(MySimpleCanvas::WIDTH / 2, MySimpleCanvas::HEIGHT / 2);
         Show();
     }
 };
@@ -80,19 +74,19 @@ public:
 class MyCanvas : public wxScrolled<wxPanel>
 {
 public:
-    MyCanvas(wxWindow *parent);
+    explicit MyCanvas(wxWindow *parent);
 
 private:
-    void OnPaint(wxPaintEvent& event);
-    void OnQueryPosition(wxCommandEvent& event);
-    void OnAddButton(wxCommandEvent& event);
-    void OnDeleteButton(wxCommandEvent& event);
-    void OnMoveButton(wxCommandEvent& event);
-    void OnScrollWin(wxCommandEvent& event);
-    void OnMouseRightDown(wxMouseEvent& event);
-    void OnMouseWheel(wxMouseEvent& event);
+    void OnPaint(wxPaintEvent &event);
+    void OnQueryPosition(wxCommandEvent &event);
+    void OnAddButton(wxCommandEvent &event);
+    void OnDeleteButton(wxCommandEvent &event);
+    void OnMoveButton(wxCommandEvent &event);
+    void OnScrollWin(wxCommandEvent &event);
+    void OnMouseRightDown(wxMouseEvent &event);
+    void OnMouseWheel(wxMouseEvent &event);
 
-    wxButton *m_button;
+    wxButton *m_button{};
 
     wxDECLARE_EVENT_TABLE();
 };
@@ -100,18 +94,17 @@ private:
 class MyCanvasFrame : public wxFrame
 {
 public:
-    MyCanvasFrame(wxWindow *parent)
-        : wxFrame(parent, wxID_ANY, "MyCanvas")
+    explicit MyCanvasFrame(wxWindow *parent) : wxFrame(parent, wxID_ANY, "MyCanvas")
     {
         m_canvas = new MyCanvas(this);
 
-        wxMenu *menuFile = new wxMenu();
+        auto *menuFile = new wxMenu();
         menuFile->Append(wxID_DELETE, "&Delete all");
         menuFile->Append(wxID_NEW, "Insert &new");
 
-        wxMenuBar *mbar = new wxMenuBar();
-        mbar->Append(menuFile, "&File");
-        SetMenuBar( mbar );
+        auto *menubar = new wxMenuBar();
+        menubar->Append(menuFile, "&File");
+        SetMenuBar(menubar);
 
         Bind(wxEVT_MENU, &MyCanvasFrame::OnDeleteAll, this, wxID_DELETE);
         Bind(wxEVT_MENU, &MyCanvasFrame::OnInsertNew, this, wxID_NEW);
@@ -120,14 +113,14 @@ public:
     }
 
 private:
-    void OnDeleteAll(wxCommandEvent& WXUNUSED(event))
+    void OnDeleteAll(wxCommandEvent &WXUNUSED(event))
     {
         m_canvas->DestroyChildren();
     }
 
-    void OnInsertNew(wxCommandEvent& WXUNUSED(event))
+    void OnInsertNew(wxCommandEvent &WXUNUSED(event))
     {
-        (void)new wxButton(m_canvas, wxID_ANY, "Hello", wxPoint(100,100));
+        (void)new wxButton(m_canvas, wxID_ANY, "Hello", wxPoint(100, 100));
     }
 
     MyCanvas *m_canvas;
@@ -137,32 +130,29 @@ private:
 // example using sizers with wxScrolled
 // ----------------------------------------------------------------------------
 
-const wxSize SMALL_BUTTON( 100, 50 );
-const wxSize LARGE_BUTTON( 300, 200 );
+const wxSize SMALL_BUTTON(100, 50);
+const wxSize LARGE_BUTTON(300, 200);
 
 class MySizerScrolledWindow : public wxScrolled<wxWindow>
 {
 public:
-    MySizerScrolledWindow(wxWindow *parent);
+    explicit MySizerScrolledWindow(wxWindow *parent);
 
 private:
     // this button can be clicked to change its own size in the handler below,
     // the window size will be automatically adjusted to fit the button
     wxButton *m_button;
-
-    void OnResizeClick(wxCommandEvent& event);
+    void OnResizeClick(wxCommandEvent &event);
 };
 
 class MySizerFrame : public wxFrame
 {
 public:
-    MySizerFrame(wxWindow *parent)
-        : wxFrame(parent, wxID_ANY, "MySizerScrolledWindow")
+    explicit MySizerFrame(wxWindow *parent) : wxFrame(parent, wxID_ANY, "MySizerScrolledWindow")
     {
         new MySizerScrolledWindow(this);
-
         // ensure that the scrollbars appear when the button becomes large
-        SetClientSize(LARGE_BUTTON/2);
+        SetClientSize(LARGE_BUTTON / 2);
         Show();
     }
 };
@@ -178,29 +168,26 @@ public:
 class MySubColLabels : public wxWindow
 {
 public:
-    MySubColLabels(wxScrolled<wxWindow> *parent)
-        : wxWindow(parent, wxID_ANY)
+    explicit MySubColLabels(wxScrolled<wxWindow> *parent) : wxWindow(parent, wxID_ANY)
     {
         m_owner = parent;
-
         Bind(wxEVT_PAINT, &MySubColLabels::OnPaint, this);
     }
 
 private:
-    void OnPaint(wxPaintEvent& WXUNUSED(event))
+    void OnPaint(wxPaintEvent &WXUNUSED(event))
     {
         wxPaintDC dc(this);
 
-        // This is wrong..  it will translate both x and y if the
+        // This is wrong.  it will translate both x and y if the
         // window is scrolled, the label windows are active in one
         // direction only.  Do the action below instead -- RL.
         //m_owner->PrepareDC( dc );
-
         int xScrollUnits, xOrigin;
 
-        m_owner->GetViewStart( &xOrigin, 0 );
-        m_owner->GetScrollPixelsPerUnit( &xScrollUnits, 0 );
-        dc.SetDeviceOrigin( -xOrigin * xScrollUnits, 0 );
+        m_owner->GetViewStart(&xOrigin, nullptr);
+        m_owner->GetScrollPixelsPerUnit(&xScrollUnits, nullptr);
+        dc.SetDeviceOrigin(-xOrigin * xScrollUnits, 0);
 
         dc.DrawText("Column 1", 5, 5);
         dc.DrawText("Column 2", 105, 5);
@@ -213,8 +200,7 @@ private:
 class MySubRowLabels : public wxWindow
 {
 public:
-    MySubRowLabels(wxScrolled<wxWindow> *parent)
-        : wxWindow(parent, wxID_ANY)
+    explicit MySubRowLabels(wxScrolled<wxWindow> *parent) : wxWindow(parent, wxID_ANY)
     {
         m_owner = parent;
 
@@ -222,20 +208,19 @@ public:
     }
 
 private:
-    void OnPaint(wxPaintEvent& WXUNUSED(event))
+    void OnPaint(wxPaintEvent &WXUNUSED(event))
     {
         wxPaintDC dc(this);
 
-        // This is wrong..  it will translate both x and y if the
+        // This is wrong.  it will translate both x and y if the
         // window is scrolled, the label windows are active in one
         // direction only.  Do the action below instead -- RL.
         //m_owner->PrepareDC( dc );
-
         int yScrollUnits, yOrigin;
 
-        m_owner->GetViewStart( 0, &yOrigin );
-        m_owner->GetScrollPixelsPerUnit( 0, &yScrollUnits );
-        dc.SetDeviceOrigin( 0, -yOrigin * yScrollUnits );
+        m_owner->GetViewStart(nullptr, &yOrigin);
+        m_owner->GetScrollPixelsPerUnit(nullptr, &yScrollUnits);
+        dc.SetDeviceOrigin(0, -yOrigin * yScrollUnits);
 
         dc.DrawText("Row 1", 5, 5);
         dc.DrawText("Row 2", 5, 30);
@@ -251,27 +236,26 @@ private:
 class MySubCanvas : public wxPanel
 {
 public:
-    MySubCanvas(wxScrolled<wxWindow> *parent, wxWindow *cols, wxWindow *rows)
-        : wxPanel(parent, wxID_ANY)
+    MySubCanvas(wxScrolled<wxWindow> *parent, wxWindow *cols, wxWindow *rows) : wxPanel(parent, wxID_ANY)
     {
         m_owner = parent;
         m_colLabels = cols;
         m_rowLabels = rows;
 
         (void)new wxButton(this, wxID_ANY, "Hallo I",
-                           wxPoint(0,50), wxSize(100,25) );
+                           wxPoint(0, 50), wxSize(100, 25));
         (void)new wxButton(this, wxID_ANY, "Hallo II",
-                           wxPoint(200,50), wxSize(100,25) );
+                           wxPoint(200, 50), wxSize(100, 25));
 
         (void)new wxTextCtrl(this, wxID_ANY, "Text I",
-                             wxPoint(0,100), wxSize(100,25) );
+                             wxPoint(0, 100), wxSize(100, 25));
         (void)new wxTextCtrl(this, wxID_ANY, "Text II",
-                             wxPoint(200,100), wxSize(100,25) );
+                             wxPoint(200, 100), wxSize(100, 25));
 
         (void)new wxComboBox(this, wxID_ANY, "ComboBox I",
-                             wxPoint(0,150), wxSize(100,25));
+                             wxPoint(0, 150), wxSize(100, 25));
         (void)new wxComboBox(this, wxID_ANY, "ComboBox II",
-                             wxPoint(200,150), wxSize(100,25));
+                             wxPoint(200, 150), wxSize(100, 25));
 
         SetBackgroundColour("WHEAT");
 
@@ -280,22 +264,22 @@ public:
 
     // override the base class function so that when this window is scrolled,
     // the labels are scrolled in sync
-    virtual void ScrollWindow(int dx, int dy, const wxRect *rect) wxOVERRIDE
+    void ScrollWindow(int dx, int dy, const wxRect *rect) wxOVERRIDE
     {
-        wxPanel::ScrollWindow( dx, dy, rect );
-        m_colLabels->ScrollWindow( dx, 0, rect );
-        m_rowLabels->ScrollWindow( 0, dy, rect );
+        wxPanel::ScrollWindow(dx, dy, rect);
+        m_colLabels->ScrollWindow(dx, 0, rect);
+        m_rowLabels->ScrollWindow(0, dy, rect);
     }
 
 private:
-    void OnPaint(wxPaintEvent& WXUNUSED(event))
+    void OnPaint(wxPaintEvent &WXUNUSED(event))
     {
-        wxPaintDC dc( this );
-        m_owner->PrepareDC( dc );
+        wxPaintDC dc(this);
+        m_owner->PrepareDC(dc);
 
-        dc.SetPen( *wxBLACK_PEN );
+        dc.SetPen(*wxBLACK_PEN);
 
-        // OK, let's assume we are a grid control and we have two
+        // OK, let's assume we are a grid control, and we have two
         // grid cells. Here in OnPaint we want to know which cell
         // to redraw so that we prevent redrawing cells that don't
         // need to get redrawn. We have one cell at (0,0) and one
@@ -306,38 +290,31 @@ private:
 
         int scroll_x = 0;
         int scroll_y = 0;
-        m_owner->CalcUnscrolledPosition( scroll_x, scroll_y, &scroll_x, &scroll_y );
+        m_owner->CalcUnscrolledPosition(scroll_x, scroll_y, &scroll_x, &scroll_y);
 
         // We also need to know the size of the window to see which
         // cells are completely hidden and not get redrawn
 
         int size_x = 0;
         int size_y = 0;
-        GetClientSize( &size_x, &size_y );
+        GetClientSize(&size_x, &size_y);
 
         // First cell: (0,0)(100,25)
         // Is it on screen?
-        if ((0+100-scroll_x > 0) && (0+25-scroll_y > 0) &&
-            (0-scroll_x < size_x) && (0-scroll_y < size_y))
-        {
+        if ((0 + 100 - scroll_x > 0) && (0 + 25 - scroll_y > 0) && (0 - scroll_x < size_x) && (0 - scroll_y < size_y)) {
             // Has the region on screen been exposed?
-            if (IsExposed(0,0,100,25))
-            {
-                dc.DrawRectangle( 0, 0, 100, 25 );
+            if (IsExposed(0, 0, 100, 25)) {
+                dc.DrawRectangle(0, 0, 100, 25);
                 dc.DrawText("First Cell", 5, 5);
             }
         }
 
-
         // Second cell: (200,0)(100,25)
         // Is it on screen?
-        if ((200+100-scroll_x > 0) && (0+25-scroll_y > 0) &&
-            (200-scroll_x < size_x) && (0-scroll_y < size_y))
-        {
+        if ((200 + 100 - scroll_x > 0) && (0 + 25 - scroll_y > 0) && (200 - scroll_x < size_x) && (0 - scroll_y < size_y)) {
             // Has the region on screen been exposed?
-            if (IsExposed(200,0,100,25))
-            {
-                dc.DrawRectangle( 200, 0, 100, 25 );
+            if (IsExposed(200, 0, 100, 25)) {
+                dc.DrawRectangle(200, 0, 100, 25);
                 dc.DrawText("Second Cell", 205, 5);
             }
         }
@@ -345,7 +322,7 @@ private:
 
     wxScrolled<wxWindow> *m_owner;
     wxWindow *m_colLabels,
-             *m_rowLabels;
+        *m_rowLabels;
 };
 
 class MySubScrolledWindow : public wxScrolled<wxWindow>
@@ -357,18 +334,17 @@ public:
         CORNER_HEIGHT = 25
     };
 
-    MySubScrolledWindow(wxWindow *parent)
-        : wxScrolled<wxWindow>(parent, wxID_ANY)
+    explicit MySubScrolledWindow(wxWindow *parent) : wxScrolled<wxWindow>(parent, wxID_ANY)
     {
         // create the children
-        MySubColLabels *cols = new MySubColLabels(this);
-        MySubRowLabels *rows = new MySubRowLabels(this);
+        auto *cols = new MySubColLabels(this);
+        auto *rows = new MySubRowLabels(this);
 
         m_canvas = new MySubCanvas(this, cols, rows);
 
         // lay them out
-        wxFlexGridSizer *sizer = new wxFlexGridSizer(2, 2, 10, 10);
-        sizer->Add(CORNER_WIDTH, CORNER_HEIGHT); // just a spacer
+        auto *sizer = new wxFlexGridSizer(2, 2, 10, 10);
+        sizer->Add(CORNER_WIDTH, CORNER_HEIGHT);// just a spacer
         sizer->Add(cols, wxSizerFlags().Expand());
         sizer->Add(rows, wxSizerFlags().Expand());
         sizer->Add(m_canvas, wxSizerFlags().Expand());
@@ -388,7 +364,7 @@ public:
 protected:
     // scrolled windows which use scroll target different from the window
     // itself must override this virtual method
-    virtual wxSize GetSizeAvailableForScrollTarget(const wxSize& size) wxOVERRIDE
+    wxSize GetSizeAvailableForScrollTarget(const wxSize &size) wxOVERRIDE
     {
         // decrease the total size by the size of the non-scrollable parts
         // above/to the left of the canvas
@@ -399,17 +375,12 @@ protected:
     }
 
 private:
-    void OnSize(wxSizeEvent& WXUNUSED(event))
+    void OnSize(wxSizeEvent &WXUNUSED(event))
     {
-        // We need to override OnSize so that our scrolled
-        // window a) does call Layout() to use sizers for
-        // positioning the controls but b) does not query
-        // the sizer for their size and use that for setting
-        // the scrollable area as set that ourselves by
-        // calling SetScrollbar() further down.
-
+        // We need to override OnSize so that our scrolled window (a) does call Layout() to use sizers for
+        // positioning the controls, but (b) does not query the sizer for their size and use that for setting
+        // the scrollable area as set that ourselves by calling SetScrollbar() further down.
         Layout();
-
         AdjustScrollbars();
     }
 
@@ -419,11 +390,9 @@ private:
 class MySubFrame : public wxFrame
 {
 public:
-    MySubFrame(wxWindow *parent)
-        : wxFrame(parent, wxID_ANY, "MySubScrolledWindow")
+    explicit MySubFrame(wxWindow *parent) : wxFrame(parent, wxID_ANY, "MySubScrolledWindow")
     {
         new MySubScrolledWindow(this);
-
         Show();
     }
 };
@@ -436,17 +405,14 @@ public:
 class MyScrolledWindowBase : public wxScrolled<wxWindow>
 {
 public:
-    MyScrolledWindowBase(wxWindow *parent)
-        : wxScrolled<wxWindow>(parent, wxID_ANY,
-                               wxDefaultPosition, wxDefaultSize,
-                               wxBORDER_SUNKEN)
+    explicit MyScrolledWindowBase(wxWindow *parent) : wxScrolled<wxWindow>(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_SUNKEN)
     {
         m_nLines = 50;
-        m_winSync = NULL;
+        m_winSync = nullptr;
         m_inDoSync = false;
 
         wxClientDC dc(this);
-        dc.GetTextExtent("Line 17", NULL, &m_hLine);
+        dc.GetTextExtent("Line 17", nullptr, &m_hLine);
     }
 
     // this scrolled window can be synchronized with another one: if this
@@ -459,31 +425,27 @@ public:
         DoSyncIfNecessary();
     }
 
-    virtual void ScrollWindow(int dx, int dy, const wxRect *rect = NULL) wxOVERRIDE
+    void ScrollWindow(int dx, int dy, const wxRect *rect) wxOVERRIDE
     {
         wxScrolled<wxWindow>::ScrollWindow(dx, dy, rect);
-
         DoSyncIfNecessary();
     }
 
 protected:
     // the height of one line on screen
-    int m_hLine;
+    int m_hLine{0};
 
     // the number of lines we draw
     size_t m_nLines;
 
 private:
-    bool WasScrolledFirst() const { return m_inDoSync; }
+    [[nodiscard]] bool WasScrolledFirst() const { return m_inDoSync; }
 
     void DoSyncIfNecessary()
     {
-        if ( m_winSync && !m_winSync->WasScrolledFirst() )
-        {
+        if (m_winSync && !m_winSync->WasScrolledFirst()) {
             m_inDoSync = true;
-
             m_winSync->Scroll(GetViewStart());
-
             m_inDoSync = false;
         }
     }
@@ -503,13 +465,13 @@ private:
 class MyScrolledWindowDumb : public MyScrolledWindowBase
 {
 public:
-    MyScrolledWindowDumb(wxWindow *parent) : MyScrolledWindowBase(parent)
+    explicit MyScrolledWindowDumb(wxWindow *parent) : MyScrolledWindowBase(parent)
     {
-        // no horz scrolling
-        SetScrollbars(0, m_hLine, 0, m_nLines + 1, 0, 0, true /* no refresh */);
+        // no horizontal scrolling
+        SetScrollbars(0, m_hLine, 0, static_cast<int>(m_nLines) + 1, 0, 0, true /* no refresh */);
     }
 
-    virtual void OnDraw(wxDC& dc) wxOVERRIDE;
+    void OnDraw(wxDC &dc) wxOVERRIDE;
 };
 
 // this class does "smart" redrawing - only redraws the lines which must be
@@ -521,14 +483,14 @@ public:
 class MyScrolledWindowSmart : public MyScrolledWindowBase
 {
 public:
-    MyScrolledWindowSmart(wxWindow *parent) : MyScrolledWindowBase(parent)
+    explicit MyScrolledWindowSmart(wxWindow *parent) : MyScrolledWindowBase(parent)
     {
-        // no horz scrolling
-        SetScrollRate( 0, m_hLine );
-        SetVirtualSize( wxDefaultCoord, ( m_nLines + 1 ) * m_hLine );
+        // no horizontal scrolling
+        SetScrollRate(0, m_hLine);
+        SetVirtualSize(wxDefaultCoord, (static_cast<int>(m_nLines) + 1) * m_hLine);
     }
 
-    virtual void OnDraw(wxDC& dc) wxOVERRIDE;
+    void OnDraw(wxDC &dc) wxOVERRIDE;
 };
 
 // ----------------------------------------------------------------------------
@@ -539,40 +501,39 @@ public:
 class MyAutoScrollingWindow : public wxScrolled<wxWindow>
 {
 public:
-    MyAutoScrollingWindow( wxWindow* parent );
-    wxRect DeviceCoordsToGraphicalChars(wxRect updRect) const;
-    wxPoint DeviceCoordsToGraphicalChars(wxPoint pos) const;
-    wxPoint GraphicalCharToDeviceCoords(wxPoint pos) const;
-    wxRect LogicalCoordsToGraphicalChars(wxRect updRect) const;
-    wxPoint LogicalCoordsToGraphicalChars(wxPoint pos) const;
-    wxPoint GraphicalCharToLogicalCoords(wxPoint pos) const;
+    explicit MyAutoScrollingWindow(wxWindow *parent);
+    [[nodiscard]] wxRect DeviceCoordsToGraphicalChars(wxRect updRect) const;
+    [[nodiscard]] wxPoint DeviceCoordsToGraphicalChars(wxPoint pos) const;
+    [[nodiscard]] wxPoint GraphicalCharToDeviceCoords(wxPoint pos) const;
+    [[maybe_unused]] [[nodiscard]] wxRect LogicalCoordsToGraphicalChars(wxRect updRect) const;
+    [[nodiscard]] wxPoint LogicalCoordsToGraphicalChars(wxPoint pos) const;
+    [[nodiscard]] wxPoint GraphicalCharToLogicalCoords(wxPoint pos) const;
     void MyRefresh();
-    bool IsSelected(int chX, int chY) const;
+    [[nodiscard]] bool IsSelected(int chX, int chY) const;
     static bool IsInside(int k, int bound1, int bound2);
     static wxRect DCNormalize(int x, int y, int w, int h);
 
 private:
     // event handlers
-    void OnDraw(wxDC& dc) wxOVERRIDE;
-    void OnMouseLeftDown(wxMouseEvent& event);
-    void OnMouseLeftUp(wxMouseEvent& event);
-    void OnMouseMove(wxMouseEvent& event);
-    void OnMouseCaptureLost(wxMouseCaptureLostEvent& event);
-    void OnScroll(wxScrollWinEvent& event);
+    void OnDraw(wxDC &dc) wxOVERRIDE;
+    void OnMouseLeftDown(wxMouseEvent &event);
+    void OnMouseLeftUp(wxMouseEvent &event);
+    void OnMouseMove(wxMouseEvent &event);
+    void OnMouseCaptureLost(wxMouseCaptureLostEvent &event);
+    void OnScroll(wxScrollWinEvent &event);
 
     // test data variables
-    static const char* sm_testData;
-    static const int sm_lineCnt; // line count
-    static const int sm_lineLen; // line length in characters
+    static const char *sm_testData;
+    static const int sm_lineCnt;// line count
+    static const int sm_lineLen;// line length in characters
     // sizes for graphical data
-    int m_fontH, m_fontW;
+    int m_fontH{}, m_fontW{};
     // selection tracking
-    wxPoint m_selStart; // beginning of blockwise selection
-    wxPoint m_cursor;   // end of blockwise selection (mouse position)
+    wxPoint m_selStart;// beginning of block-wise selection
+    wxPoint m_cursor;  // end of block-wise selection (mouse position)
 
     // gui stuff
     wxFont m_font;
-
 
     wxDECLARE_EVENT_TABLE();
 };
@@ -580,40 +541,36 @@ private:
 class MyAutoFrame : public wxFrame
 {
 public:
-    MyAutoFrame(wxWindow *parent)
-        : wxFrame(parent, wxID_ANY, "MyAutoScrollingWindow")
+    explicit MyAutoFrame(wxWindow *parent) : wxFrame(parent, wxID_ANY, "MyAutoScrollingWindow")
     {
         new MyAutoScrollingWindow(this);
-
         Show();
     }
 };
-
 
 // ----------------------------------------------------------------------------
 // MyFrame: the main application frame showing all the classes above
 // ----------------------------------------------------------------------------
 
-class MyFrame: public wxFrame
+class MyFrame : public wxFrame
 {
 public:
     MyFrame();
 
 private:
-    void OnAbout(wxCommandEvent& event);
-    void OnQuit(wxCommandEvent& event);
+    void OnAbout(wxCommandEvent &event);
+    void OnQuit(wxCommandEvent &event);
 
-    void OnTestSimple(wxCommandEvent& WXUNUSED(event)) { new MySimpleFrame(this); }
-    void OnTestCanvas(wxCommandEvent& WXUNUSED(event)) { new MyCanvasFrame(this); }
-    void OnTestSizer(wxCommandEvent& WXUNUSED(event)) { new MySizerFrame(this); }
-    void OnTestSub(wxCommandEvent& WXUNUSED(event)) { new MySubFrame(this); }
-    void OnTestAuto(wxCommandEvent& WXUNUSED(event)) { new MyAutoFrame(this); }
+    void OnTestSimple(wxCommandEvent &WXUNUSED(event)) { new MySimpleFrame(this); }
+    void OnTestCanvas(wxCommandEvent &WXUNUSED(event)) { new MyCanvasFrame(this); }
+    void OnTestSizer(wxCommandEvent &WXUNUSED(event)) { new MySizerFrame(this); }
+    void OnTestSub(wxCommandEvent &WXUNUSED(event)) { new MySubFrame(this); }
+    void OnTestAuto(wxCommandEvent &WXUNUSED(event)) { new MyAutoFrame(this); }
 
-    void OnToggleSync(wxCommandEvent& event);
-    void OnScrollbarVisibility(wxCommandEvent& event);
+    void OnToggleSync(wxCommandEvent &event);
+    void OnScrollbarVisibility(wxCommandEvent &event);
 
-    MyScrolledWindowBase *m_win1,
-                         *m_win2;
+    MyScrolledWindowBase *m_win1, *m_win2;
 
     wxDECLARE_EVENT_TABLE();
 };
@@ -625,9 +582,8 @@ private:
 class MyApp : public wxApp
 {
 public:
-    virtual bool OnInit() wxOVERRIDE;
+    bool OnInit() wxOVERRIDE;
 };
-
 
 // ============================================================================
 // implementation
@@ -637,166 +593,145 @@ public:
 // MyCanvas
 // ----------------------------------------------------------------------------
 
-const wxWindowIDRef ID_ADDBUTTON   = wxWindow::NewControlId();
-const wxWindowIDRef ID_DELBUTTON   = wxWindow::NewControlId();
-const wxWindowIDRef ID_MOVEBUTTON  = wxWindow::NewControlId();
-const wxWindowIDRef ID_SCROLLWIN   = wxWindow::NewControlId();
-const wxWindowIDRef ID_QUERYPOS    = wxWindow::NewControlId();
+const wxWindowIDRef ID_ADDBUTTON = wxWindow::NewControlId();
+const wxWindowIDRef ID_DELBUTTON = wxWindow::NewControlId();
+const wxWindowIDRef ID_MOVEBUTTON = wxWindow::NewControlId();
+const wxWindowIDRef ID_SCROLLWIN = wxWindow::NewControlId();
+const wxWindowIDRef ID_QUERYPOS = wxWindow::NewControlId();
 
-const wxWindowIDRef ID_NEWBUTTON   = wxWindow::NewControlId();
+const wxWindowIDRef ID_NEWBUTTON = wxWindow::NewControlId();
 
 wxBEGIN_EVENT_TABLE(MyCanvas, wxScrolled<wxPanel>)
-    EVT_PAINT(                  MyCanvas::OnPaint)
-    EVT_RIGHT_DOWN(             MyCanvas::OnMouseRightDown)
-    EVT_MOUSEWHEEL(             MyCanvas::OnMouseWheel)
-    EVT_BUTTON( ID_QUERYPOS,    MyCanvas::OnQueryPosition)
-    EVT_BUTTON( ID_ADDBUTTON,   MyCanvas::OnAddButton)
-    EVT_BUTTON( ID_DELBUTTON,   MyCanvas::OnDeleteButton)
-    EVT_BUTTON( ID_MOVEBUTTON,  MyCanvas::OnMoveButton)
-    EVT_BUTTON( ID_SCROLLWIN,   MyCanvas::OnScrollWin)
+    EVT_PAINT(MyCanvas::OnPaint)
+    EVT_RIGHT_DOWN(MyCanvas::OnMouseRightDown)
+    EVT_MOUSEWHEEL(MyCanvas::OnMouseWheel)
+    EVT_BUTTON(ID_QUERYPOS, MyCanvas::OnQueryPosition)
+    EVT_BUTTON(ID_ADDBUTTON, MyCanvas::OnAddButton)
+    EVT_BUTTON(ID_DELBUTTON, MyCanvas::OnDeleteButton)
+    EVT_BUTTON(ID_MOVEBUTTON, MyCanvas::OnMoveButton)
+    EVT_BUTTON(ID_SCROLLWIN, MyCanvas::OnScrollWin)
 wxEND_EVENT_TABLE()
 
-MyCanvas::MyCanvas(wxWindow *parent)
-    : wxScrolled<wxPanel>(parent, wxID_ANY,
-                          wxDefaultPosition, wxDefaultSize,
-                          wxSUNKEN_BORDER | wxTAB_TRAVERSAL)
+MyCanvas::MyCanvas(wxWindow *parent) : wxScrolled<wxPanel>(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxTAB_TRAVERSAL)
 {
     // you can use either a single SetScrollbars() call or these 2 functions,
     // usually using them is better because you normally won't need to change
     // the scroll rate in the future and the sizer can be used to update the
     // virtual size automatically
-    SetScrollRate( 10, 10 );
-    SetVirtualSize( 500, 1000 );
+    SetScrollRate(10, 10);
+    SetVirtualSize(500, 1000);
 
-    (void) new wxButton( this, ID_ADDBUTTON,  "add button", wxPoint(10,10) );
-    (void) new wxButton( this, ID_DELBUTTON,  "del button", wxPoint(10,40) );
-    (void) new wxButton( this, ID_MOVEBUTTON, "move button", wxPoint(150,10) );
-    (void) new wxButton( this, ID_SCROLLWIN,  "scroll win", wxPoint(250,10) );
+    (void)new wxButton(this, ID_ADDBUTTON, "add button", wxPoint(10, 10));
+    (void)new wxButton(this, ID_DELBUTTON, "del button", wxPoint(10, 40));
+    (void)new wxButton(this, ID_MOVEBUTTON, "move button", wxPoint(150, 10));
+    (void)new wxButton(this, ID_SCROLLWIN, "scroll win", wxPoint(250, 10));
 
-    wxPanel *test = new wxPanel( this, wxID_ANY,
-                                 wxPoint(10, 110), wxSize(130,50),
-                                 wxSIMPLE_BORDER | wxTAB_TRAVERSAL );
-    test->SetBackgroundColour( "WHEAT" );
-
-    SetBackgroundColour( "BLUE" );
+    auto *test = new wxPanel(this, wxID_ANY, wxPoint(10, 110), wxSize(130, 50), wxSIMPLE_BORDER | wxTAB_TRAVERSAL);
+    test->SetBackgroundColour("WHEAT");
+    SetBackgroundColour("BLUE");
 }
 
-void MyCanvas::OnMouseRightDown( wxMouseEvent &event )
+void MyCanvas::OnMouseRightDown(wxMouseEvent &event)
 {
-    wxPoint pt( event.GetPosition() );
-    int x,y;
-    CalcUnscrolledPosition( pt.x, pt.y, &x, &y );
-    wxLogMessage("Mouse down event at: %d %d, scrolled: %d %d",
-                 pt.x, pt.y, x, y);
+    wxPoint pt(event.GetPosition());
+    int x, y;
+    CalcUnscrolledPosition(pt.x, pt.y, &x, &y);
+    wxLogMessage("Mouse down event at: %d %d, scrolled: %d %d", pt.x, pt.y, x, y);
 }
 
-void MyCanvas::OnMouseWheel( wxMouseEvent &event )
+void MyCanvas::OnMouseWheel(wxMouseEvent &event)
 {
-    wxPoint pt( event.GetPosition() );
-    int x,y;
-    CalcUnscrolledPosition( pt.x, pt.y, &x, &y );
-    wxLogMessage( "Mouse wheel event at: %d %d, scrolled: %d %d\n"
-                  "Rotation: %d, delta: %d, inverted: %d",
-                  pt.x, pt.y, x, y,
-                  event.GetWheelRotation(), event.GetWheelDelta(),
-                  event.IsWheelInverted() );
+    wxPoint pt(event.GetPosition());
+    int x, y;
+    CalcUnscrolledPosition(pt.x, pt.y, &x, &y);
+    wxLogMessage("Mouse wheel event at: %d %d, scrolled: %d %d\n"
+                 "Rotation: %d, delta: %d, inverted: %d",
+                 pt.x, pt.y, x, y,
+                 event.GetWheelRotation(), event.GetWheelDelta(),
+                 event.IsWheelInverted());
 
     event.Skip();
 }
 
-void MyCanvas::OnPaint( wxPaintEvent &WXUNUSED(event) )
+void MyCanvas::OnPaint(wxPaintEvent &WXUNUSED(event))
 {
-    wxPaintDC dc( this );
-    PrepareDC( dc );
+    wxPaintDC dc(this);
+    PrepareDC(dc);
 
-    dc.DrawText( "Press right mouse button to test calculations!", 160, 50 );
-
-    dc.DrawText( "Some text", 140, 140 );
-
-    dc.DrawRectangle( 100, 160, 200, 200 );
+    dc.DrawText("Press right mouse button to test calculations!", 160, 50);
+    dc.DrawText("Some text", 140, 140);
+    dc.DrawRectangle(100, 160, 200, 200);
 }
 
-void MyCanvas::OnQueryPosition( wxCommandEvent &WXUNUSED(event) )
+void MyCanvas::OnQueryPosition(wxCommandEvent &WXUNUSED(event))
 {
-    wxPoint pt( m_button->GetPosition() );
-    wxLogMessage( "Position of \"Query position\" is %d %d", pt.x, pt.y );
-    pt = ClientToScreen( pt );
-    wxLogMessage("Position of \"Query position\" on screen is %d %d",
-                 pt.x, pt.y);
+    wxPoint pt(m_button->GetPosition());
+    wxLogMessage("Position of \"Query position\" is %d %d", pt.x, pt.y);
+    pt = ClientToScreen(pt);
+    wxLogMessage("Position of \"Query position\" on screen is %d %d", pt.x, pt.y);
 }
 
-void MyCanvas::OnAddButton( wxCommandEvent &WXUNUSED(event) )
+void MyCanvas::OnAddButton(wxCommandEvent &WXUNUSED(event))
 {
-    wxLogMessage( "Inserting button at position 10,70..." );
-    wxButton *button = new wxButton( this, ID_NEWBUTTON, "new button",
-                                     wxPoint(10,70), wxSize(80,25) );
-    wxPoint pt( button->GetPosition() );
-    wxLogMessage( "-> Position after inserting %d %d", pt.x, pt.y );
+    wxLogMessage("Inserting button at position 10,70...");
+    auto *button = new wxButton(this, ID_NEWBUTTON, "new button", wxPoint(10, 70), wxSize(80, 25));
+    wxPoint pt(button->GetPosition());
+    wxLogMessage("-> Position after inserting %d %d", pt.x, pt.y);
 }
 
-void MyCanvas::OnDeleteButton( wxCommandEvent &WXUNUSED(event) )
+void MyCanvas::OnDeleteButton(wxCommandEvent &WXUNUSED(event))
 {
-    wxLogMessage( "Deleting button inserted with \"Add button\"..." );
-    wxWindow *win = FindWindow( ID_NEWBUTTON );
+    wxLogMessage("Deleting button inserted with \"Add button\"...");
+    wxWindow *win = FindWindow(ID_NEWBUTTON);
     if (win)
-       win->Destroy();
+        win->Destroy();
     else
-       wxLogMessage( "-> No window with id = ID_NEWBUTTON found." );
+        wxLogMessage("-> No window with id = ID_NEWBUTTON found.");
 }
 
-void MyCanvas::OnMoveButton( wxCommandEvent &event )
+void MyCanvas::OnMoveButton(wxCommandEvent &event)
 {
-    wxLogMessage( "Moving button 10 pixels downward.." );
-    wxWindow *win = FindWindow( event.GetId() );
-    wxPoint pt( win->GetPosition() );
-    wxLogMessage( "-> Position before move is %d %d", pt.x, pt.y );
-    win->Move( wxDefaultCoord, pt.y + 10 );
+    wxLogMessage("Moving button 10 pixels downward..");
+    wxWindow *win = FindWindow(event.GetId());
+    wxPoint pt(win->GetPosition());
+    wxLogMessage("-> Position before move is %d %d", pt.x, pt.y);
+    win->Move(wxDefaultCoord, pt.y + 10);
     pt = win->GetPosition();
-    wxLogMessage( "-> Position after move is %d %d", pt.x, pt.y );
+    wxLogMessage("-> Position after move is %d %d", pt.x, pt.y);
 }
 
-void MyCanvas::OnScrollWin( wxCommandEvent &WXUNUSED(event) )
+void MyCanvas::OnScrollWin(wxCommandEvent &WXUNUSED(event))
 {
     wxLogMessage("Scrolling 2 units up.\n"
                  "The white square and the controls should move equally!");
-    Scroll( wxDefaultCoord, GetViewStart().y+2 );
+    Scroll(wxDefaultCoord, GetViewStart().y + 2);
 }
 
 // ----------------------------------------------------------------------------
 // MySizerScrolledWindow
 // ----------------------------------------------------------------------------
 
-MySizerScrolledWindow::MySizerScrolledWindow(wxWindow *parent)
-    : wxScrolled<wxWindow>(parent)
+MySizerScrolledWindow::MySizerScrolledWindow(wxWindow *parent) : wxScrolled<wxWindow>(parent)
 {
-    SetBackgroundColour( "GREEN" );
+    SetBackgroundColour("GREEN");
 
     // Set the rate we'd like for scrolling.
-
-    SetScrollRate( 5, 5 );
+    SetScrollRate(5, 5);
 
     // Populate a sizer with a 'resizing' button and some other static
     // decoration
+    auto *sizer = new wxFlexGridSizer(2);
 
-    wxFlexGridSizer *sizer = new wxFlexGridSizer(2);
-
-    m_button = new wxButton( this, wxID_RESIZE_FRAME, "Press me",
-                             wxDefaultPosition, SMALL_BUTTON );
+    m_button = new wxButton(this, wxID_RESIZE_FRAME, "Press me", wxDefaultPosition, SMALL_BUTTON);
 
     sizer->Add(m_button, wxSizerFlags().Centre().Border(wxALL, 20));
-    sizer->Add(new wxStaticText(this, wxID_ANY, "This is just"),
-               wxSizerFlags().Centre());
-    sizer->Add(new wxStaticText(this, wxID_ANY, "some decoration"),
-               wxSizerFlags().Centre());
-    sizer->Add(new wxStaticText(this, wxID_ANY, "for you to scroll..."),
-               wxSizerFlags().Centre());
+    sizer->Add(new wxStaticText(this, wxID_ANY, "This is just"), wxSizerFlags().Centre());
+    sizer->Add(new wxStaticText(this, wxID_ANY, "some decoration"), wxSizerFlags().Centre());
+    sizer->Add(new wxStaticText(this, wxID_ANY, "for you to scroll..."), wxSizerFlags().Centre());
 
     // Then use the sizer to set the scrolled region size.
-
-    SetSizer( sizer );
-
-    Bind(wxEVT_BUTTON, &MySizerScrolledWindow::OnResizeClick, this,
-         wxID_RESIZE_FRAME);
+    SetSizer(sizer);
+    Bind(wxEVT_BUTTON, &MySizerScrolledWindow::OnResizeClick, this, wxID_RESIZE_FRAME);
 }
 
 void MySizerScrolledWindow::OnResizeClick(wxCommandEvent &WXUNUSED(event))
@@ -804,7 +739,7 @@ void MySizerScrolledWindow::OnResizeClick(wxCommandEvent &WXUNUSED(event))
     // Arbitrarily resize the button to change the minimum size of
     // the (scrolled) sizer.
 
-    if ( m_button->GetSize() == SMALL_BUTTON )
+    if (m_button->GetSize() == SMALL_BUTTON)
         m_button->SetSizeHints(LARGE_BUTTON);
     else
         m_button->SetSizeHints(SMALL_BUTTON);
@@ -821,15 +756,15 @@ void MySizerScrolledWindow::OnResizeClick(wxCommandEvent &WXUNUSED(event))
 const wxWindowID Scroll_Test_Simple = wxWindow::NewControlId();
 const wxWindowID Scroll_Test_Canvas = wxWindow::NewControlId();
 const wxWindowID Scroll_Test_Sizers = wxWindow::NewControlId();
-const wxWindowID Scroll_Test_Sub    = wxWindow::NewControlId();
-const wxWindowID Scroll_Test_Auto   = wxWindow::NewControlId();
+const wxWindowID Scroll_Test_Sub = wxWindow::NewControlId();
+const wxWindowID Scroll_Test_Auto = wxWindow::NewControlId();
 
 const wxWindowID Scroll_TglBtn_Sync = wxWindow::NewControlId();
 const wxWindowID Scroll_Radio_ShowScrollbar = wxWindow::NewControlId();
 
-wxBEGIN_EVENT_TABLE(MyFrame,wxFrame)
+wxBEGIN_EVENT_TABLE(MyFrame, wxFrame)
     EVT_MENU(wxID_ABOUT, MyFrame::OnAbout)
-    EVT_MENU(wxID_EXIT,  MyFrame::OnQuit)
+    EVT_MENU(wxID_EXIT, MyFrame::OnQuit)
 
     EVT_MENU(Scroll_Test_Simple, MyFrame::OnTestSimple)
     EVT_MENU(Scroll_Test_Canvas, MyFrame::OnTestCanvas)
@@ -841,17 +776,16 @@ wxBEGIN_EVENT_TABLE(MyFrame,wxFrame)
     EVT_RADIOBOX(Scroll_Radio_ShowScrollbar, MyFrame::OnScrollbarVisibility)
 wxEND_EVENT_TABLE()
 
-MyFrame::MyFrame()
-       : wxFrame(NULL, wxID_ANY, "wxWidgets scroll sample")
+MyFrame::MyFrame() : wxFrame(nullptr, wxID_ANY, "wxWidgets scroll sample")
 {
     SetIcon(wxICON(sample));
 
-    wxMenu *menuFile = new wxMenu;
+    auto *menuFile = new wxMenu;
     menuFile->Append(wxID_ABOUT, "&About..");
     menuFile->AppendSeparator();
     menuFile->Append(wxID_EXIT, "E&xit\tAlt-X");
 
-    wxMenu *menuTest = new wxMenu;
+    auto *menuTest = new wxMenu;
     menuTest->Append(Scroll_Test_Simple, "&Simple scroll window\tF1",
                      "Simplest possible scrolled window test.");
     menuTest->Append(Scroll_Test_Canvas, "Scrolled window with &children\tF2",
@@ -864,26 +798,23 @@ MyFrame::MyFrame()
                      "Window which scrolls when the mouse is held pressed "
                      "outside of it.");
 
-    wxMenuBar *mbar = new wxMenuBar;
-    mbar->Append(menuFile, "&File");
-    mbar->Append(menuTest, "&Test");
+    auto *menubar = new wxMenuBar;
+    menubar->Append(menuFile, "&File");
+    menubar->Append(menuTest, "&Test");
+    SetMenuBar(menubar);
 
-    SetMenuBar( mbar );
-
-
-    wxPanel *panel = new wxPanel(this);
-
+    auto *panel = new wxPanel(this);
     const wxSizerFlags flagsExpand(wxSizerFlags(1).Expand());
 
-    wxSizer *topsizer = new wxBoxSizer(wxVERTICAL);
+    auto *topsizer = new wxBoxSizer(wxVERTICAL);
     topsizer->Add(new wxStaticText(panel, wxID_ANY,
-        "The windows below should behave in the same way, even though\n"
-        "they're implemented quite differently, see the code for details.\n"
-        "\n"
-        "The lines redrawn during odd/even repaint iterations are drawn in\n"
-        "red/blue colour to allow seeing immediately how much is repainted,\n"
-        "don't be surprised by this."),
-        wxSizerFlags().Centre().Border());
+                                   "The windows below should behave in the same way, even though\n"
+                                   "they're implemented quite differently, see the code for details.\n"
+                                   "\n"
+                                   "The lines redrawn during odd/even repaint iterations are drawn in\n"
+                                   "red/blue colour to allow seeing immediately how much is repainted,\n"
+                                   "don't be surprised by this."),
+                  wxSizerFlags().Centre().Border());
 
     m_win1 = new MyScrolledWindowDumb(panel);
     m_win2 = new MyScrolledWindowSmart(panel);
@@ -893,53 +824,45 @@ MyFrame::MyFrame()
     sizerScrollWin->Add(m_win2, flagsExpand);
     topsizer->Add(sizerScrollWin, flagsExpand);
 
-    const wxSizerFlags
-        flagsHBorder(wxSizerFlags().Centre().Border(wxLEFT | wxRIGHT));
+    const wxSizerFlags flagsHBorder(wxSizerFlags().Centre().Border(wxLEFT | wxRIGHT));
 
     wxSizer *sizerBtns = new wxBoxSizer(wxHORIZONTAL);
 
     // the radio buttons are in the same order as wxSHOW_SB_XXX values but
     // offset by 1
-    const wxString visibilities[] = { "&never", "&default", "&always" };
-    wxRadioBox *radio = new wxRadioBox(panel, Scroll_Radio_ShowScrollbar,
+    const wxString visibilities[] = {"&never", "&default", "&always"};
+    auto *radio = new wxRadioBox(panel, Scroll_Radio_ShowScrollbar,
                                        "Left &scrollbar visibility: ",
                                        wxDefaultPosition, wxDefaultSize,
                                        WXSIZEOF(visibilities), visibilities);
     radio->SetSelection(wxSHOW_SB_DEFAULT + 1);
     sizerBtns->Add(radio, flagsHBorder);
 
-    sizerBtns->Add(new wxToggleButton(panel, Scroll_TglBtn_Sync, "S&ynchronize"),
-                   flagsHBorder);
-
+    sizerBtns->Add(new wxToggleButton(panel, Scroll_TglBtn_Sync, "S&ynchronize"), flagsHBorder);
     topsizer->Add(sizerBtns, wxSizerFlags().Centre().Border());
-
     panel->SetSizer(topsizer);
 
     wxSize size = panel->GetBestSize();
     SetSizeHints(size);
-    SetClientSize(2*size);
+    SetClientSize(2 * size);
 
     Show();
 }
 
-void MyFrame::OnToggleSync(wxCommandEvent& event)
+void MyFrame::OnToggleSync(wxCommandEvent &event)
 {
-    if ( event.IsChecked() )
-    {
+    if (event.IsChecked()) {
         m_win1->SyncWith(m_win2);
         m_win2->SyncWith(m_win1);
-    }
-    else
-    {
-        m_win1->SyncWith(NULL);
-        m_win2->SyncWith(NULL);
+    } else {
+        m_win1->SyncWith(nullptr);
+        m_win2->SyncWith(nullptr);
     }
 }
 
-void MyFrame::OnScrollbarVisibility(wxCommandEvent& event)
+void MyFrame::OnScrollbarVisibility(wxCommandEvent &event)
 {
-    m_win1->ShowScrollbars(wxSHOW_SB_NEVER,
-                           wxScrollbarVisibility(event.GetSelection() - 1));
+    m_win1->ShowScrollbars(wxSHOW_SB_NEVER, wxScrollbarVisibility(event.GetSelection() - 1));
 }
 
 void MyFrame::OnQuit(wxCommandEvent &WXUNUSED(event))
@@ -947,29 +870,29 @@ void MyFrame::OnQuit(wxCommandEvent &WXUNUSED(event))
     Close(true);
 }
 
-void MyFrame::OnAbout( wxCommandEvent &WXUNUSED(event) )
+void MyFrame::OnAbout(wxCommandEvent &WXUNUSED(event)) // NOLINT(*-convert-member-functions-to-static)
 {
-    (void)wxMessageBox( "Scrolled window sample\n"
-                        "\n"
-                        "Robert Roebling (c) 1998\n"
-                        "Vadim Zeitlin (c) 2008\n"
-                        "Autoscrolling examples\n"
-                        "Ron Lee (c) 2002\n"
-                        "Auto-timed-scrolling example\n"
-                        "Matt Gregory (c) 2003\n",
-                        "About wxWidgets scroll sample",
-                        wxICON_INFORMATION | wxOK );
+    (void)wxMessageBox("Scrolled window sample\n"
+                       "\n"
+                       "Robert Roebling (c) 1998\n"
+                       "Vadim Zeitlin (c) 2008\n"
+                       "Autoscrolling examples\n"
+                       "Ron Lee (c) 2002\n"
+                       "Auto-timed-scrolling example\n"
+                       "Matt Gregory (c) 2003\n",
+                       "About wxWidgets scroll sample",
+                       wxICON_INFORMATION | wxOK);
 }
 
 // ----------------------------------------------------------------------------
 // MyApp
 // ----------------------------------------------------------------------------
 
-wxIMPLEMENT_APP(MyApp);
+wxIMPLEMENT_APP(MyApp); // NOLINT(*-pro-type-static-cast-downcast)
 
 bool MyApp::OnInit()
 {
-    if ( !wxApp::OnInit() )
+    if (!wxApp::OnInit())
         return false;
 
     new MyFrame();
@@ -981,25 +904,25 @@ bool MyApp::OnInit()
 // MyScrolledWindowXXX
 // ----------------------------------------------------------------------------
 
-void MyScrolledWindowDumb::OnDraw(wxDC& dc)
+void MyScrolledWindowDumb::OnDraw(wxDC &dc)
 {
     // this is useful to see which lines are redrawn
     static size_t s_redrawCount = 0;
     dc.SetTextForeground(s_redrawCount++ % 2 ? *wxRED : *wxBLUE);
 
     int y = 0;
-    for ( size_t line = 0; line < m_nLines; line++ )
-    {
+    for (size_t line = 0; line < m_nLines; line++) {
         int yPhys;
-        CalcScrolledPosition(0, y, NULL, &yPhys);
+        CalcScrolledPosition(0, y, nullptr, &yPhys);
 
         dc.DrawText(wxString::Format("Line %u (logical %d, physical %d)",
-                                     unsigned(line), y, yPhys), 0, y);
+                                     unsigned(line), y, yPhys),
+                    0, y);
         y += m_hLine;
     }
 }
 
-void MyScrolledWindowSmart::OnDraw(wxDC& dc)
+void MyScrolledWindowSmart::OnDraw(wxDC &dc)
 {
     // this is useful to see which lines are redrawn
     static size_t s_redrawCount = 0;
@@ -1013,17 +936,17 @@ void MyScrolledWindowSmart::OnDraw(wxDC& dc)
     size_t lineFrom = rectUpdate.y / m_hLine,
            lineTo = rectUpdate.GetBottom() / m_hLine;
 
-    if ( lineTo > m_nLines - 1)
+    if (lineTo > m_nLines - 1)
         lineTo = m_nLines - 1;
 
-    int y = lineFrom*m_hLine;
-    for ( size_t line = lineFrom; line <= lineTo; line++ )
-    {
+    int y = static_cast<int>(lineFrom) * m_hLine;
+    for (size_t line = lineFrom; line <= lineTo; line++) {
         int yPhys;
-        CalcScrolledPosition(0, y, NULL, &yPhys);
+        CalcScrolledPosition(0, y, nullptr, &yPhys);
 
         dc.DrawText(wxString::Format("Line %u (logical %d, physical %d)",
-                                     unsigned(line), y, yPhys), 0, y);
+                                     unsigned(line), y, yPhys),
+                    0, y);
         y += m_hLine;
     }
 }
@@ -1040,9 +963,7 @@ wxBEGIN_EVENT_TABLE(MyAutoScrollingWindow, wxScrolled<wxWindow>)
     EVT_SCROLLWIN(MyAutoScrollingWindow::OnScroll)
 wxEND_EVENT_TABLE()
 
-MyAutoScrollingWindow::MyAutoScrollingWindow(wxWindow* parent)
-    : wxScrolled<wxWindow>(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize,
-                           wxVSCROLL | wxHSCROLL | wxSUNKEN_BORDER),
+MyAutoScrollingWindow::MyAutoScrollingWindow(wxWindow *parent) : wxScrolled<wxWindow>(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxVSCROLL | wxHSCROLL | wxSUNKEN_BORDER),
       m_selStart(-1, -1),
       m_cursor(-1, -1),
       m_font(9, wxFONTFAMILY_TELETYPE, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL)
@@ -1067,7 +988,7 @@ MyAutoScrollingWindow::DeviceCoordsToGraphicalChars(wxRect updRect) const
     // the *CoordsToGraphicalChars() funcs round down to upper-left corner,
     //   so an off-by-one correction is needed
     ++updRect.width; // kludge
-    ++updRect.height; // kludge
+    ++updRect.height;// kludge
     return updRect;
 }
 
@@ -1089,8 +1010,7 @@ MyAutoScrollingWindow::GraphicalCharToDeviceCoords(wxPoint pos) const
     return pos;
 }
 
-wxRect
-MyAutoScrollingWindow::LogicalCoordsToGraphicalChars(wxRect updRect) const
+[[maybe_unused]] wxRect MyAutoScrollingWindow::LogicalCoordsToGraphicalChars(wxRect updRect) const
 {
     wxPoint pos(updRect.GetPosition());
     pos = LogicalCoordsToGraphicalChars(pos);
@@ -1101,20 +1021,18 @@ MyAutoScrollingWindow::LogicalCoordsToGraphicalChars(wxRect updRect) const
     // the *CoordsToGraphicalChars() funcs round down to upper-left corner,
     //   so an off-by-one correction is needed
     ++updRect.width; // kludge
-    ++updRect.height; // kludge
+    ++updRect.height;// kludge
     return updRect;
 }
 
-wxPoint
-MyAutoScrollingWindow::LogicalCoordsToGraphicalChars(wxPoint pos) const
+wxPoint MyAutoScrollingWindow::LogicalCoordsToGraphicalChars(wxPoint pos) const
 {
     pos.x /= m_fontW;
     pos.y /= m_fontH;
     return pos;
 }
 
-wxPoint
-MyAutoScrollingWindow::GraphicalCharToLogicalCoords(wxPoint pos) const
+wxPoint MyAutoScrollingWindow::GraphicalCharToLogicalCoords(wxPoint pos) const
 {
     pos.x *= m_fontW;
     pos.y *= m_fontH;
@@ -1126,21 +1044,19 @@ void MyAutoScrollingWindow::MyRefresh()
     static wxPoint lastSelStart(-1, -1), lastCursor(-1, -1);
     // refresh last selected area (to deselect previously selected text)
     wxRect lastUpdRect(
-            GraphicalCharToDeviceCoords(lastSelStart),
-            GraphicalCharToDeviceCoords(lastCursor)
-        );
+        GraphicalCharToDeviceCoords(lastSelStart),
+        GraphicalCharToDeviceCoords(lastCursor));
     // off-by-one corrections, necessary because it's not possible to know
     //   when to round up until rect is normalized by lastUpdRect constructor
     lastUpdRect.width += m_fontW; // kludge
-    lastUpdRect.height += m_fontH; // kludge
+    lastUpdRect.height += m_fontH;// kludge
     // refresh currently selected (to select previously unselected text)
     wxRect updRect(
-            GraphicalCharToDeviceCoords(m_selStart),
-            GraphicalCharToDeviceCoords(m_cursor)
-        );
+        GraphicalCharToDeviceCoords(m_selStart),
+        GraphicalCharToDeviceCoords(m_cursor));
     // off-by-one corrections
     updRect.width += m_fontW; // kludge
-    updRect.height += m_fontH; // kludge
+    updRect.height += m_fontH;// kludge
     // find necessary refresh areas
     int rx = lastUpdRect.x;
     int ry = lastUpdRect.y;
@@ -1151,7 +1067,7 @@ void MyAutoScrollingWindow::MyRefresh()
     }
     rx = updRect.x;
     ry = updRect.y + updRect.height;
-    rw= updRect.width;
+    rw = updRect.width;
     rh = (lastUpdRect.y + lastUpdRect.height) - (updRect.y + updRect.height);
     if (rw && rh) {
         RefreshRect(DCNormalize(rx, ry, rw, rh));
@@ -1178,7 +1094,7 @@ void MyAutoScrollingWindow::MyRefresh()
 bool MyAutoScrollingWindow::IsSelected(int chX, int chY) const
 {
     if (IsInside(chX, m_selStart.x, m_cursor.x)
-            && IsInside(chY, m_selStart.y, m_cursor.y)) {
+        && IsInside(chY, m_selStart.y, m_cursor.y)) {
         return true;
     }
     return false;
@@ -1192,8 +1108,7 @@ bool MyAutoScrollingWindow::IsInside(int k, int bound1, int bound2)
     return false;
 }
 
-wxRect
-MyAutoScrollingWindow::DCNormalize(int x, int y, int w, int h)
+wxRect MyAutoScrollingWindow::DCNormalize(int x, int y, int w, int h)
 {
     // this is needed to get rid of the graphical remnants from the selection
     // I think it's because DrawRectangle() excludes a pixel in either direction
@@ -1213,10 +1128,10 @@ MyAutoScrollingWindow::DCNormalize(int x, int y, int w, int h)
         y -= kludge;
         h += kludge;
     }
-    return wxRect(x, y, w, h);
+    return {x, y, w, h};
 }
 
-void MyAutoScrollingWindow::OnDraw(wxDC& dc)
+void MyAutoScrollingWindow::OnDraw(wxDC &dc)
 {
     dc.SetFont(m_font);
     wxBrush normBrush(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW));
@@ -1232,36 +1147,26 @@ void MyAutoScrollingWindow::OnDraw(wxDC& dc)
         wxRect updRect = upd.GetRect();
         wxRect updRectInGChars(DeviceCoordsToGraphicalChars(updRect));
         // 2. for each row of chars in the update region
-        for (int chY = updRectInGChars.y
-                ; chY <= updRectInGChars.y + updRectInGChars.height; ++chY) {
+        for (int chY = updRectInGChars.y; chY <= updRectInGChars.y + updRectInGChars.height; ++chY) {
             // 3. for each character in the row
             bool isFirstX = true;
-            for (int chX = updRectInGChars.x
-                    ; chX <= updRectInGChars.x + updRectInGChars.width
-                    ; ++chX) {
+            for (int chX = updRectInGChars.x; chX <= updRectInGChars.x + updRectInGChars.width; ++chX) {
                 // 4. set up dc
                 if (IsSelected(chX, chY)) {
                     dc.SetBrush(selBrush);
-                    dc.SetTextForeground( wxSystemSettings::GetColour
-                            (wxSYS_COLOUR_HIGHLIGHTTEXT));
+                    dc.SetTextForeground(wxSystemSettings::GetColour(wxSYS_COLOUR_HIGHLIGHTTEXT));
                 } else {
                     dc.SetBrush(normBrush);
-                    dc.SetTextForeground( wxSystemSettings::GetColour
-                            (wxSYS_COLOUR_WINDOWTEXT));
+                    dc.SetTextForeground(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOWTEXT));
                 }
                 // 5. find position info
-                wxPoint charPos = GraphicalCharToLogicalCoords(wxPoint
-                        (chX, chY));
+                wxPoint charPos = GraphicalCharToLogicalCoords(wxPoint(chX, chY));
                 // 6. draw!
                 dc.DrawRectangle(charPos.x, charPos.y, m_fontW, m_fontH);
                 size_t charIndex = chY * sm_lineLen + chX;
-                if (chY < sm_lineCnt &&
-                    chX < sm_lineLen &&
-                    charIndex < strLength)
-                {
-                    if (isFirstX)
-                    {
-                        str_i = str.begin() + charIndex;
+                if (chY < sm_lineCnt && chX < sm_lineLen && charIndex < strLength) {
+                    if (isFirstX) {
+                        str_i = str.begin() + static_cast<long long>(charIndex);
                         isFirstX = false;
                     }
                     dc.DrawText(*str_i, charPos.x, charPos.y);
@@ -1272,7 +1177,7 @@ void MyAutoScrollingWindow::OnDraw(wxDC& dc)
     }
 }
 
-void MyAutoScrollingWindow::OnMouseLeftDown(wxMouseEvent& event)
+void MyAutoScrollingWindow::OnMouseLeftDown(wxMouseEvent &event)
 {
     // initial press of mouse button sets the beginning of the selection
     m_selStart = DeviceCoordsToGraphicalChars(event.GetPosition());
@@ -1282,16 +1187,16 @@ void MyAutoScrollingWindow::OnMouseLeftDown(wxMouseEvent& event)
     MyRefresh();
 }
 
-void MyAutoScrollingWindow::OnMouseLeftUp(wxMouseEvent& WXUNUSED(event))
+void MyAutoScrollingWindow::OnMouseLeftUp(wxMouseEvent &WXUNUSED(event))
 {
     // this test is necessary
     if (HasCapture()) {
-        // uncapture mouse
+        // un-capture mouse
         ReleaseMouse();
     }
 }
 
-void MyAutoScrollingWindow::OnMouseMove(wxMouseEvent& event)
+void MyAutoScrollingWindow::OnMouseMove(wxMouseEvent &event)
 {
     // if user is dragging
     if (event.Dragging() && event.LeftIsDown()) {
@@ -1306,17 +1211,15 @@ void MyAutoScrollingWindow::OnMouseMove(wxMouseEvent& event)
     }
 }
 
-void
-MyAutoScrollingWindow::OnMouseCaptureLost(wxMouseCaptureLostEvent&
-                                                WXUNUSED(event))
+void MyAutoScrollingWindow::OnMouseCaptureLost(wxMouseCaptureLostEvent & WXUNUSED(event))
 {
     // we only capture mouse for timed scrolling, so nothing is needed here
     // other than making sure to not call event.Skip()
 }
 
-void MyAutoScrollingWindow::OnScroll(wxScrollWinEvent& event)
+void MyAutoScrollingWindow::OnScroll(wxScrollWinEvent &event)
 {
-    // need to move the cursor when autoscrolling
+    // need to move the cursor when auto-scrolling
     // FIXME: the cursor also moves when the scrollbar arrows are clicked
     if (HasCapture()) {
         if (event.GetOrientation() == wxHORIZONTAL) {
@@ -1340,126 +1243,126 @@ void MyAutoScrollingWindow::OnScroll(wxScrollWinEvent& event)
 const int MyAutoScrollingWindow::sm_lineCnt = 125;
 const int MyAutoScrollingWindow::sm_lineLen = 79;
 const char *MyAutoScrollingWindow::sm_testData =
-"162 Cult of the genius out of vanity. Because we think well of ourselves, but "
-"nonetheless never suppose ourselves capable of producing a painting like one of "
-"Raphael's or a dramatic scene like one of Shakespeare's, we convince ourselves "
-"that the capacity to do so is quite extraordinarily marvelous, a wholly "
-"uncommon accident, or, if we are still religiously inclined, a mercy from on "
-"high. Thus our vanity, our self-love, promotes the cult of the genius: for only "
-"if we think of him as being very remote from us, as a miraculum, does he not "
-"aggrieve us (even Goethe, who was without envy, called Shakespeare his star of "
-"the most distant heights [\"William! Stern der schonsten Ferne\": from Goethe's, "
-"\"Between Two Worlds\"]; in regard to which one might recall the lines: \"the "
-"stars, these we do not desire\" [from Goethe's, \"Comfort in Tears\"]). But, aside "
-"from these suggestions of our vanity, the activity of the genius seems in no "
-"way fundamentally different from the activity of the inventor of machines, the "
-"scholar of astronomy or history, the master of tactics. All these activities "
-"are explicable if one pictures to oneself people whose thinking is active in "
-"one direction, who employ everything as material, who always zealously observe "
-"their own inner life and that of others, who perceive everywhere models and "
-"incentives, who never tire of combining together the means available to them. "
-"Genius too does nothing except learn first how to lay bricks then how to build, "
-"except continually seek for material and continually form itself around it. "
-"Every activity of man is amazingly complicated, not only that of the genius: "
-"but none is a \"miracle.\" Whence, then, the belief that genius exists only in "
-"the artist, orator and philosopher? that only they have \"intuition\"? (Whereby "
-"they are supposed to possess a kind of miraculous eyeglass with which they can "
-"see directly into \"the essence of the thing\"!) It is clear that people speak of "
-"genius only where the effects of the great intellect are most pleasant to them "
-"and where they have no desire to feel envious. To call someone \"divine\" means: "
-"\"here there is no need for us to compete.\" Then, everything finished and "
-"complete is regarded with admiration, everything still becoming is undervalued. "
-"But no one can see in the work of the artist how it has become; that is its "
-"advantage, for wherever one can see the act of becoming one grows somewhat "
-"cool. The finished and perfect art of representation repulses all thinking as "
-"to how it has become; it tyrannizes as present completeness and perfection. "
-"That is why the masters of the art of representation count above all as gifted "
-"with genius and why men of science do not. In reality, this evaluation of the "
-"former and undervaluation of the latter is only a piece of childishness in the "
-"realm of reason. "
-"\n\n"
-"163 The serious workman. Do not talk about giftedness, inborn talents! One can "
-"name great men of all kinds who were very little gifted. The acquired "
-"greatness, became \"geniuses\" (as we put it), through qualities the lack of "
-"which no one who knew what they were would boast of: they all possessed that "
-"seriousness of the efficient workman which first learns to construct the parts "
-"properly before it ventures to fashion a great whole; they allowed themselves "
-"time for it, because they took more pleasure in making the little, secondary "
-"things well than in the effect of a dazzling whole. the recipe for becoming a "
-"good novelist, for example, is easy to give, but to carry it out presupposes "
-"qualities one is accustomed to overlook when one says \"I do not have enough "
-"talent.\" One has only to make a hundred or so sketches for novels, none longer "
-"than two pages but of such distinctness that every word in them is necessary; "
-"one should write down anecdotes each day until one has learned how to give them "
-"the most pregnant and effective form; one should be tireless in collecting and "
-"describing human types and characters; one should above all relate things to "
-"others and listen to others relate, keeping one's eyes and ears open for the "
-"effect produced on those present, one should travel like a landscape painter or "
-"costume designer; one should excerpt for oneself out of the individual sciences "
-"everything that will produce an artistic effect when it is well described, one "
-"should, finally, reflect on the motives of human actions, disdain no signpost "
-"to instruction about them and be a collector of these things by day and night. "
-"One should continue in this many-sided exercise some ten years: what is then "
-"created in the workshop, however, will be fit to go out into the world. What, "
-"however, do most people do? They begin, not with the parts, but with the whole. "
-"Perhaps they chance to strike a right note, excite attention and from then on "
-"strike worse and worse notes, for good, natural reasons. Sometimes, when the "
-"character and intellect needed to formulate such a life-plan are lacking, fate "
-"and need take their place and lead the future master step by step through all "
-"the stipulations of his trade. "
-"\n\n"
-"164 Peril and profit in the cult of the genius. The belief in great, superior, "
-"fruitful spirits is not necessarily, yet nonetheless is very frequently "
-"associated with that religious or semi-religious superstition that these "
-"spirits are of supra-human origin and possess certain miraculous abilities by "
-"virtue of which they acquire their knowledge by quite other means than the rest "
-"of mankind. One ascribes to them, it seems, a direct view of the nature of the "
-"world, as it were a hole in the cloak of appearance, and believes that, by "
-"virtue of this miraculous seer's vision, they are able to communicate something "
-"conclusive and decisive about man and the world without the toil and "
-"rigorousness required by science. As long as there continue to be those who "
-"believe in the miraculous in the domain of knowledge one can perhaps concede "
-"that these people themselves derive some benefit from their belief, inasmuch as "
-"through their unconditional subjection to the great spirits they create for "
-"their own spirit during its time of development the finest form of discipline "
-"and schooling. On the other hand, it is at least questionable whether the "
-"superstitious belief in genius, in its privileges and special abilities, is of "
-"benefit to the genius himself if it takes root in him. It is in any event a "
-"dangerous sign when a man is assailed by awe of himself, whether it be the "
-"celebrated Caesar's awe of Caesar or the awe of one's own genius now under "
-"consideration; when the sacrificial incense which is properly rendered only to "
-"a god penetrates the brain of the genius, so that his head begins to swim and "
-"he comes to regard himself as something supra-human. The consequences that "
-"slowly result are: the feeling of irresponsibility, of exceptional rights, the "
-"belief that he confers a favor by his mere presence, insane rage when anyone "
-"attempts even to compare him with others, let alone to rate him beneath them, "
-"or to draw attention to lapses in his work. Because he ceases to practice "
-"criticism of himself, at last one pinion after the other falls out of his "
-"plumage: that superstitious eats at the roots of his powers and perhaps even "
-"turns him into a hypocrite after his powers have fled from him. For the great "
-"spirits themselves it is therefore probably more beneficial if they acquire an "
-"insight into the nature and origin of their powers, if they grasp, that is to "
-"say, what purely human qualities have come together in them and what fortunate "
-"circumstances attended them: in the first place undiminished energy, resolute "
-"application to individual goals, great personal courage, then the good fortune "
-"to receive an upbringing which offered in the early years the finest teachers, "
-"models and methods. To be sure, when their goal is the production of the "
-"greatest possible effect, unclarity with regard to oneself and that "
-"semi-insanity superadded to it has always achieved much; for what has been "
-"admired and envied at all times has been that power in them by virtue of which "
-"they render men will-less and sweep them away into the delusion that the "
-"leaders they are following are supra-natural. Indeed, it elevates and inspires "
-"men to believe that someone is in possession of supra-natural powers: to this "
-"extent Plato was right to say [Plato: Phaedrus, 244a] that madness has brought "
-"the greatest of blessings upon mankind. In rare individual cases this portion "
-"of madness may, indeed, actually have been the means by which such a nature, "
-"excessive in all directions, was held firmly together: in the life of "
-"individuals, too, illusions that are in themselves poisons often play the role "
-"of healers; yet, in the end, in the case of every \"genius\" who believes in his "
-"own divinity the poison shows itself to the same degree as his \"genius\" grows "
-"old: one may recall, for example, the case of Napoleon, whose nature certainly "
-"grew into the mighty unity that sets him apart from all men of modern times "
-"precisely through his belief in himself and his star and through the contempt "
-"for men that flowed from it; until in the end, however, this same belief went "
-"over into an almost insane fatalism, robbed him of his acuteness and swiftness "
-"of perception, and became the cause of his destruction.";
+    "162 Cult of the genius out of vanity. Because we think well of ourselves, but "
+    "nonetheless never suppose ourselves capable of producing a painting like one of "
+    "Raphael's or a dramatic scene like one of Shakespeare's, we convince ourselves "
+    "that the capacity to do so is quite extraordinarily marvelous, a wholly "
+    "uncommon accident, or, if we are still religiously inclined, a mercy from on "
+    "high. Thus our vanity, our self-love, promotes the cult of the genius: for only "
+    "if we think of him as being very remote from us, as a miraculum, does he not "
+    "aggrieve us (even Goethe, who was without envy, called Shakespeare his star of "
+    "the most distant heights [\"William! Stern der schonsten Ferne\": from Goethe's, "
+    "\"Between Two Worlds\"]; in regard to which one might recall the lines: \"the "
+    "stars, these we do not desire\" [from Goethe's, \"Comfort in Tears\"]). But, aside "
+    "from these suggestions of our vanity, the activity of the genius seems in no "
+    "way fundamentally different from the activity of the inventor of machines, the "
+    "scholar of astronomy or history, the master of tactics. All these activities "
+    "are explicable if one pictures to oneself people whose thinking is active in "
+    "one direction, who employ everything as material, who always zealously observe "
+    "their own inner life and that of others, who perceive everywhere models and "
+    "incentives, who never tire of combining together the means available to them. "
+    "Genius too does nothing except learn first how to lay bricks then how to build, "
+    "except continually seek for material and continually form itself around it. "
+    "Every activity of man is amazingly complicated, not only that of the genius: "
+    "but none is a \"miracle.\" Whence, then, the belief that genius exists only in "
+    "the artist, orator and philosopher? that only they have \"intuition\"? (Whereby "
+    "they are supposed to possess a kind of miraculous eyeglass with which they can "
+    "see directly into \"the essence of the thing\"!) It is clear that people speak of "
+    "genius only where the effects of the great intellect are most pleasant to them "
+    "and where they have no desire to feel envious. To call someone \"divine\" means: "
+    "\"here there is no need for us to compete.\" Then, everything finished and "
+    "complete is regarded with admiration, everything still becoming is undervalued. "
+    "But no one can see in the work of the artist how it has become; that is its "
+    "advantage, for wherever one can see the act of becoming one grows somewhat "
+    "cool. The finished and perfect art of representation repulses all thinking as "
+    "to how it has become; it tyrannizes as present completeness and perfection. "
+    "That is why the masters of the art of representation count above all as gifted "
+    "with genius and why men of science do not. In reality, this evaluation of the "
+    "former and undervaluation of the latter is only a piece of childishness in the "
+    "realm of reason. "
+    "\n\n"
+    "163 The serious workman. Do not talk about giftedness, inborn talents! One can "
+    "name great men of all kinds who were very little gifted. The acquired "
+    "greatness, became \"geniuses\" (as we put it), through qualities the lack of "
+    "which no one who knew what they were would boast of: they all possessed that "
+    "seriousness of the efficient workman which first learns to construct the parts "
+    "properly before it ventures to fashion a great whole; they allowed themselves "
+    "time for it, because they took more pleasure in making the little, secondary "
+    "things well than in the effect of a dazzling whole. the recipe for becoming a "
+    "good novelist, for example, is easy to give, but to carry it out presupposes "
+    "qualities one is accustomed to overlook when one says \"I do not have enough "
+    "talent.\" One has only to make a hundred or so sketches for novels, none longer "
+    "than two pages but of such distinctness that every word in them is necessary; "
+    "one should write down anecdotes each day until one has learned how to give them "
+    "the most pregnant and effective form; one should be tireless in collecting and "
+    "describing human types and characters; one should above all relate things to "
+    "others and listen to others relate, keeping one's eyes and ears open for the "
+    "effect produced on those present, one should travel like a landscape painter or "
+    "costume designer; one should excerpt for oneself out of the individual sciences "
+    "everything that will produce an artistic effect when it is well described, one "
+    "should, finally, reflect on the motives of human actions, disdain no signpost "
+    "to instruction about them and be a collector of these things by day and night. "
+    "One should continue in this many-sided exercise some ten years: what is then "
+    "created in the workshop, however, will be fit to go out into the world. What, "
+    "however, do most people do? They begin, not with the parts, but with the whole. "
+    "Perhaps they chance to strike a right note, excite attention and from then on "
+    "strike worse and worse notes, for good, natural reasons. Sometimes, when the "
+    "character and intellect needed to formulate such a life-plan are lacking, fate "
+    "and need take their place and lead the future master step by step through all "
+    "the stipulations of his trade. "
+    "\n\n"
+    "164 Peril and profit in the cult of the genius. The belief in great, superior, "
+    "fruitful spirits is not necessarily, yet nonetheless is very frequently "
+    "associated with that religious or semi-religious superstition that these "
+    "spirits are of supra-human origin and possess certain miraculous abilities by "
+    "virtue of which they acquire their knowledge by quite other means than the rest "
+    "of mankind. One ascribes to them, it seems, a direct view of the nature of the "
+    "world, as it were a hole in the cloak of appearance, and believes that, by "
+    "virtue of this miraculous seer's vision, they are able to communicate something "
+    "conclusive and decisive about man and the world without the toil and "
+    "rigorousness required by science. As long as there continue to be those who "
+    "believe in the miraculous in the domain of knowledge one can perhaps concede "
+    "that these people themselves derive some benefit from their belief, inasmuch as "
+    "through their unconditional subjection to the great spirits they create for "
+    "their own spirit during its time of development the finest form of discipline "
+    "and schooling. On the other hand, it is at least questionable whether the "
+    "superstitious belief in genius, in its privileges and special abilities, is of "
+    "benefit to the genius himself if it takes root in him. It is in any event a "
+    "dangerous sign when a man is assailed by awe of himself, whether it be the "
+    "celebrated Caesar's awe of Caesar or the awe of one's own genius now under "
+    "consideration; when the sacrificial incense which is properly rendered only to "
+    "a god penetrates the brain of the genius, so that his head begins to swim and "
+    "he comes to regard himself as something supra-human. The consequences that "
+    "slowly result are: the feeling of irresponsibility, of exceptional rights, the "
+    "belief that he confers a favor by his mere presence, insane rage when anyone "
+    "attempts even to compare him with others, let alone to rate him beneath them, "
+    "or to draw attention to lapses in his work. Because he ceases to practice "
+    "criticism of himself, at last one pinion after the other falls out of his "
+    "plumage: that superstitious eats at the roots of his powers and perhaps even "
+    "turns him into a hypocrite after his powers have fled from him. For the great "
+    "spirits themselves it is therefore probably more beneficial if they acquire an "
+    "insight into the nature and origin of their powers, if they grasp, that is to "
+    "say, what purely human qualities have come together in them and what fortunate "
+    "circumstances attended them: in the first place undiminished energy, resolute "
+    "application to individual goals, great personal courage, then the good fortune "
+    "to receive an upbringing which offered in the early years the finest teachers, "
+    "models and methods. To be sure, when their goal is the production of the "
+    "greatest possible effect, unclarity with regard to oneself and that "
+    "semi-insanity superadded to it has always achieved much; for what has been "
+    "admired and envied at all times has been that power in them by virtue of which "
+    "they render men will-less and sweep them away into the delusion that the "
+    "leaders they are following are supra-natural. Indeed, it elevates and inspires "
+    "men to believe that someone is in possession of supra-natural powers: to this "
+    "extent Plato was right to say [Plato: Phaedrus, 244a] that madness has brought "
+    "the greatest of blessings upon mankind. In rare individual cases this portion "
+    "of madness may, indeed, actually have been the means by which such a nature, "
+    "excessive in all directions, was held firmly together: in the life of "
+    "individuals, too, illusions that are in themselves poisons often play the role "
+    "of healers; yet, in the end, in the case of every \"genius\" who believes in his "
+    "own divinity the poison shows itself to the same degree as his \"genius\" grows "
+    "old: one may recall, for example, the case of Napoleon, whose nature certainly "
+    "grew into the mighty unity that sets him apart from all men of modern times "
+    "precisely through his belief in himself and his star and through the contempt "
+    "for men that flowed from it; until in the end, however, this same belief went "
+    "over into an almost insane fatalism, robbed him of his acuteness and swiftness "
+    "of perception, and became the cause of his destruction.";
