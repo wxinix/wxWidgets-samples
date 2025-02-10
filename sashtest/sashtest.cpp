@@ -48,7 +48,6 @@ bool MyApp::OnInit()
 
     // Make a menubar
     auto *file_menu = new wxMenu;
-
     file_menu->Append(SASHTEST_NEW_WINDOW, "&New window");
     file_menu->Append(SASHTEST_TOGGLE_WINDOW, "&Toggle window");
     file_menu->Append(SASHTEST_QUIT, "&Exit");
@@ -57,7 +56,6 @@ bool MyApp::OnInit()
     help_menu->Append(SASHTEST_ABOUT, "&About");
 
     auto *menu_bar = new wxMenuBar;
-
     menu_bar->Append(file_menu, "&File");
     menu_bar->Append(help_menu, "&Help");
 
