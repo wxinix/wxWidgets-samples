@@ -75,48 +75,40 @@ MyFrame::MyFrame(wxWindow *parent, const wxWindowID id, const wxString &title, c
 {
     // Create some dummy layout windows
     // A window like a toolbar
-    auto *win = new wxSashLayoutWindow(this, ID_WINDOW_TOP, wxDefaultPosition, wxSize(200, 30), wxNO_BORDER | wxSW_3D | wxCLIP_CHILDREN);
-
-    win->SetDefaultSize(wxSize(1000, 30));
-    win->SetOrientation(wxLAYOUT_HORIZONTAL);
-    win->SetAlignment(wxLAYOUT_TOP);
-    win->SetBackgroundColour(*wxRED);
-    win->SetSashVisible(wxSASH_BOTTOM, true);
-
-    m_topWindow = win;
+    m_topWindow = new wxSashLayoutWindow(this, ID_WINDOW_TOP, wxDefaultPosition, wxSize(200, 30), wxNO_BORDER | wxSW_3D | wxCLIP_CHILDREN);
+    m_topWindow->SetDefaultSize(wxSize(1000, 30));
+    m_topWindow->SetOrientation(wxLAYOUT_HORIZONTAL);
+    m_topWindow->SetAlignment(wxLAYOUT_TOP);
+    m_topWindow->SetBackgroundColour(*wxRED);
+    m_topWindow->SetSashVisible(wxSASH_BOTTOM, true);
 
     // A window like a statusbar
-    win = new wxSashLayoutWindow(this, ID_WINDOW_BOTTOM, wxDefaultPosition, wxSize(200, 30), wxNO_BORDER | wxSW_3D | wxCLIP_CHILDREN);
-    win->SetDefaultSize(wxSize(1000, 30));
-    win->SetOrientation(wxLAYOUT_HORIZONTAL);
-    win->SetAlignment(wxLAYOUT_BOTTOM);
-    win->SetBackgroundColour(*wxBLUE);
-    win->SetSashVisible(wxSASH_TOP, true);
-
-    m_bottomWindow = win;
+    m_bottomWindow = new wxSashLayoutWindow(this, ID_WINDOW_BOTTOM, wxDefaultPosition, wxSize(200, 30), wxNO_BORDER | wxSW_3D | wxCLIP_CHILDREN);
+    m_bottomWindow->SetDefaultSize(wxSize(1000, 30));
+    m_bottomWindow->SetOrientation(wxLAYOUT_HORIZONTAL);
+    m_bottomWindow->SetAlignment(wxLAYOUT_BOTTOM);
+    m_bottomWindow->SetBackgroundColour(*wxBLUE);
+    m_bottomWindow->SetSashVisible(wxSASH_TOP, true);
 
     // A window to the left of the client window
-    win = new wxSashLayoutWindow(this, ID_WINDOW_LEFT1, wxDefaultPosition, wxSize(200, 30), wxNO_BORDER | wxSW_3D | wxCLIP_CHILDREN);
-    win->SetDefaultSize(wxSize(120, 1000));
-    win->SetOrientation(wxLAYOUT_VERTICAL);
-    win->SetAlignment(wxLAYOUT_LEFT);
-    win->SetBackgroundColour(*wxGREEN);
-    win->SetSashVisible(wxSASH_RIGHT, true);
-    win->SetExtraBorderSize(10);
+    m_leftWindow1 = new wxSashLayoutWindow(this, ID_WINDOW_LEFT1, wxDefaultPosition, wxSize(200, 30), wxNO_BORDER | wxSW_3D | wxCLIP_CHILDREN);
+    m_leftWindow1->SetDefaultSize(wxSize(120, 1000));
+    m_leftWindow1->SetOrientation(wxLAYOUT_VERTICAL);
+    m_leftWindow1->SetAlignment(wxLAYOUT_LEFT);
+    m_leftWindow1->SetBackgroundColour(*wxGREEN);
+    m_leftWindow1->SetSashVisible(wxSASH_RIGHT, true);
+    m_leftWindow1->SetExtraBorderSize(10);
 
-    auto *textWindow = new wxTextCtrl(win, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE | wxSUNKEN_BORDER);//wxTE_MULTILINE|wxNO_BORDER);
+    auto *textWindow = new wxTextCtrl(m_leftWindow1, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE | wxSUNKEN_BORDER);//wxTE_MULTILINE|wxNO_BORDER);
     textWindow->SetValue("A help window");
-    m_leftWindow1 = win;
 
     // Another window to the left of the client window
-    win = new wxSashLayoutWindow(this, ID_WINDOW_LEFT2, wxDefaultPosition, wxSize(200, 30), wxNO_BORDER | wxSW_3D | wxCLIP_CHILDREN);
-    win->SetDefaultSize(wxSize(120, 1000));
-    win->SetOrientation(wxLAYOUT_VERTICAL);
-    win->SetAlignment(wxLAYOUT_LEFT);
-    win->SetBackgroundColour(wxColour(0, 255, 255));
-    win->SetSashVisible(wxSASH_RIGHT, true);
-
-    m_leftWindow2 = win;
+    m_leftWindow2 = new wxSashLayoutWindow(this, ID_WINDOW_LEFT2, wxDefaultPosition, wxSize(200, 30), wxNO_BORDER | wxSW_3D | wxCLIP_CHILDREN);
+    m_leftWindow2->SetDefaultSize(wxSize(120, 1000));
+    m_leftWindow2->SetOrientation(wxLAYOUT_VERTICAL);
+    m_leftWindow2->SetAlignment(wxLAYOUT_LEFT);
+    m_leftWindow2->SetBackgroundColour(wxColour(0, 255, 255));
+    m_leftWindow2->SetSashVisible(wxSASH_RIGHT, true);
 
     Bind(wxEVT_SIZE, &MyFrame::OnMyFrameSize, this);
     Bind(wxEVT_MENU, &MyFrame::OnAbout, this, SASHTEST_ABOUT);
@@ -186,7 +178,6 @@ void MyFrame::OnNewWindow(wxCommandEvent &WXUNUSED(event))// NOLINT(*-convert-me
 {
     // Make another frame, containing a canvas
     auto *subframe = new MyChild(frame, "Canvas Frame", wxPoint(10, 10), wxSize(300, 300));
-
     subframe->SetTitle(wxString::Format("Canvas Frame %d", winNumber));
     winNumber++;
 
@@ -208,7 +199,6 @@ void MyFrame::OnNewWindow(wxCommandEvent &WXUNUSED(event))// NOLINT(*-convert-me
     file_menu->Append(SASHTEST_QUIT, "&Exit");
 
     auto *option_menu = new wxMenu;
-
     // Dummy option
     option_menu->Append(SASHTEST_REFRESH, "&Refresh picture");
 
@@ -230,14 +220,13 @@ void MyFrame::OnNewWindow(wxCommandEvent &WXUNUSED(event))// NOLINT(*-convert-me
     subframe->SetCanvas(canvas);
     // Give it scrollbars
     canvas->SetScrollbars(20, 20, 50, 50);
-
     subframe->Show(true);
 }
 
 // Define a constructor for my m_canvas
 MyCanvas::MyCanvas(wxWindow *parent, const wxPoint &pos, const wxSize &size) : wxScrolledWindow(parent, wxID_ANY, pos, size, wxSUNKEN_BORDER)
 {
-    SetBackgroundColour(*wxWHITE);
+    SetBackgroundColour(*wxLIGHT_GREY);
 
     Bind(wxEVT_LEFT_DOWN, &MyCanvas::OnMouseEvent, this);
     Bind(wxEVT_LEFT_UP, &MyCanvas::OnMouseEvent, this);
