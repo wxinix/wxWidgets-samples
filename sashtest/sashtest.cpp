@@ -240,6 +240,12 @@ MyCanvas::MyCanvas(wxWindow *parent, const wxPoint &pos, const wxSize &size) : w
     Bind(wxEVT_MOTION, &MyCanvas::OnMouseEvent, this);
     Bind(wxEVT_ENTER_WINDOW, &MyCanvas::OnMouseEvent, this);
     Bind(wxEVT_LEAVE_WINDOW, &MyCanvas::OnMouseEvent, this);
+
+    Bind(wxEVT_SIZE, [this](wxSizeEvent& event) {
+    auto virtualSize = GetVirtualSize();
+    wxLogMessage("Virtual size after resize: %d x %d",
+                 virtualSize.x, virtualSize.y);
+    event.Skip(); });
 }
 
 // Define the repainting behaviour

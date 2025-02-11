@@ -832,9 +832,9 @@ MyFrame::MyFrame() : wxFrame(nullptr, wxID_ANY, "wxWidgets scroll sample")
     // offset by 1
     const wxString visibilities[] = {"&never", "&default", "&always"};
     auto *radio = new wxRadioBox(panel, Scroll_Radio_ShowScrollbar,
-                                       "Left &scrollbar visibility: ",
-                                       wxDefaultPosition, wxDefaultSize,
-                                       WXSIZEOF(visibilities), visibilities);
+                                 "Left &scrollbar visibility: ",
+                                 wxDefaultPosition, wxDefaultSize,
+                                 WXSIZEOF(visibilities), visibilities);
     radio->SetSelection(wxSHOW_SB_DEFAULT + 1);
     sizerBtns->Add(radio, flagsHBorder);
 
@@ -870,7 +870,7 @@ void MyFrame::OnQuit(wxCommandEvent &WXUNUSED(event))
     Close(true);
 }
 
-void MyFrame::OnAbout(wxCommandEvent &WXUNUSED(event)) // NOLINT(*-convert-member-functions-to-static)
+void MyFrame::OnAbout(wxCommandEvent &WXUNUSED(event))// NOLINT(*-convert-member-functions-to-static)
 {
     (void)wxMessageBox("Scrolled window sample\n"
                        "\n"
@@ -888,7 +888,7 @@ void MyFrame::OnAbout(wxCommandEvent &WXUNUSED(event)) // NOLINT(*-convert-membe
 // MyApp
 // ----------------------------------------------------------------------------
 
-wxIMPLEMENT_APP(MyApp); // NOLINT(*-pro-type-static-cast-downcast)
+wxIMPLEMENT_APP(MyApp);// NOLINT(*-pro-type-static-cast-downcast)
 
 bool MyApp::OnInit()
 {
@@ -964,9 +964,9 @@ wxBEGIN_EVENT_TABLE(MyAutoScrollingWindow, wxScrolled<wxWindow>)
 wxEND_EVENT_TABLE()
 
 MyAutoScrollingWindow::MyAutoScrollingWindow(wxWindow *parent) : wxScrolled<wxWindow>(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxVSCROLL | wxHSCROLL | wxSUNKEN_BORDER),
-      m_selStart(-1, -1),
-      m_cursor(-1, -1),
-      m_font(9, wxFONTFAMILY_TELETYPE, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL)
+                                                                                             m_selStart(-1, -1),
+                                                                                             m_cursor(-1, -1),
+                                                                                             m_font(9, wxFONTFAMILY_TELETYPE, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL)
 {
     wxClientDC dc(this);
     // query dc for text size
@@ -976,8 +976,7 @@ MyAutoScrollingWindow::MyAutoScrollingWindow(wxWindow *parent) : wxScrolled<wxWi
     SetScrollbars(m_fontW, m_fontH, sm_lineLen, sm_lineCnt);
 }
 
-wxRect
-MyAutoScrollingWindow::DeviceCoordsToGraphicalChars(wxRect updRect) const
+wxRect MyAutoScrollingWindow::DeviceCoordsToGraphicalChars(wxRect updRect) const
 {
     wxPoint pos(updRect.GetPosition());
     pos = DeviceCoordsToGraphicalChars(pos);
@@ -992,8 +991,7 @@ MyAutoScrollingWindow::DeviceCoordsToGraphicalChars(wxRect updRect) const
     return updRect;
 }
 
-wxPoint
-MyAutoScrollingWindow::DeviceCoordsToGraphicalChars(wxPoint pos) const
+wxPoint MyAutoScrollingWindow::DeviceCoordsToGraphicalChars(wxPoint pos) const
 {
     pos.x /= m_fontW;
     pos.y /= m_fontH;
@@ -1001,8 +999,7 @@ MyAutoScrollingWindow::DeviceCoordsToGraphicalChars(wxPoint pos) const
     return pos;
 }
 
-wxPoint
-MyAutoScrollingWindow::GraphicalCharToDeviceCoords(wxPoint pos) const
+wxPoint MyAutoScrollingWindow::GraphicalCharToDeviceCoords(wxPoint pos) const
 {
     pos -= GetViewStart();
     pos.x *= m_fontW;
@@ -1211,7 +1208,7 @@ void MyAutoScrollingWindow::OnMouseMove(wxMouseEvent &event)
     }
 }
 
-void MyAutoScrollingWindow::OnMouseCaptureLost(wxMouseCaptureLostEvent & WXUNUSED(event))
+void MyAutoScrollingWindow::OnMouseCaptureLost(wxMouseCaptureLostEvent &WXUNUSED(event))
 {
     // we only capture mouse for timed scrolling, so nothing is needed here
     // other than making sure to not call event.Skip()
