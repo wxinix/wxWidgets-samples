@@ -593,23 +593,23 @@ public:
 // MyCanvas
 // ----------------------------------------------------------------------------
 
-const wxWindowIDRef ID_ADDBUTTON = wxWindow::NewControlId();
-const wxWindowIDRef ID_DELBUTTON = wxWindow::NewControlId();
-const wxWindowIDRef ID_MOVEBUTTON = wxWindow::NewControlId();
-const wxWindowIDRef ID_SCROLLWIN = wxWindow::NewControlId();
-const wxWindowIDRef ID_QUERYPOS = wxWindow::NewControlId();
+const wxWindowIDRef ID_ADD_BUTTON = wxWindow::NewControlId();
+const wxWindowIDRef ID_DEL_BUTTON = wxWindow::NewControlId();
+const wxWindowIDRef ID_MOVE_BUTTON = wxWindow::NewControlId();
+const wxWindowIDRef ID_SCROLL_WINDOW = wxWindow::NewControlId();
+const wxWindowIDRef ID_QUERY_POS = wxWindow::NewControlId();
 
-const wxWindowIDRef ID_NEWBUTTON = wxWindow::NewControlId();
+const wxWindowIDRef ID_NEW_BUTTON = wxWindow::NewControlId();
 
 wxBEGIN_EVENT_TABLE(MyCanvas, wxScrolled<wxPanel>)
     EVT_PAINT(MyCanvas::OnPaint)
     EVT_RIGHT_DOWN(MyCanvas::OnMouseRightDown)
     EVT_MOUSEWHEEL(MyCanvas::OnMouseWheel)
-    EVT_BUTTON(ID_QUERYPOS, MyCanvas::OnQueryPosition)
-    EVT_BUTTON(ID_ADDBUTTON, MyCanvas::OnAddButton)
-    EVT_BUTTON(ID_DELBUTTON, MyCanvas::OnDeleteButton)
-    EVT_BUTTON(ID_MOVEBUTTON, MyCanvas::OnMoveButton)
-    EVT_BUTTON(ID_SCROLLWIN, MyCanvas::OnScrollWin)
+    EVT_BUTTON(ID_QUERY_POS, MyCanvas::OnQueryPosition)
+    EVT_BUTTON(ID_ADD_BUTTON, MyCanvas::OnAddButton)
+    EVT_BUTTON(ID_DEL_BUTTON, MyCanvas::OnDeleteButton)
+    EVT_BUTTON(ID_MOVE_BUTTON, MyCanvas::OnMoveButton)
+    EVT_BUTTON(ID_SCROLL_WINDOW, MyCanvas::OnScrollWin)
 wxEND_EVENT_TABLE()
 
 MyCanvas::MyCanvas(wxWindow *parent) : wxScrolled<wxPanel>(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSUNKEN_BORDER | wxTAB_TRAVERSAL)
@@ -621,10 +621,10 @@ MyCanvas::MyCanvas(wxWindow *parent) : wxScrolled<wxPanel>(parent, wxID_ANY, wxD
     SetScrollRate(10, 10);
     SetVirtualSize(500, 1000);
 
-    (void)new wxButton(this, ID_ADDBUTTON, "add button", wxPoint(10, 10));
-    (void)new wxButton(this, ID_DELBUTTON, "del button", wxPoint(10, 40));
-    (void)new wxButton(this, ID_MOVEBUTTON, "move button", wxPoint(150, 10));
-    (void)new wxButton(this, ID_SCROLLWIN, "scroll win", wxPoint(250, 10));
+    (void)new wxButton(this, ID_ADD_BUTTON, "add button", wxPoint(10, 10));
+    (void)new wxButton(this, ID_DEL_BUTTON, "del button", wxPoint(10, 40));
+    (void)new wxButton(this, ID_MOVE_BUTTON, "move button", wxPoint(150, 10));
+    (void)new wxButton(this, ID_SCROLL_WINDOW, "scroll win", wxPoint(250, 10));
 
     auto *test = new wxPanel(this, wxID_ANY, wxPoint(10, 110), wxSize(130, 50), wxSIMPLE_BORDER | wxTAB_TRAVERSAL);
     test->SetBackgroundColour("WHEAT");
@@ -674,7 +674,7 @@ void MyCanvas::OnQueryPosition(wxCommandEvent &WXUNUSED(event))
 void MyCanvas::OnAddButton(wxCommandEvent &WXUNUSED(event))
 {
     wxLogMessage("Inserting button at position 10,70...");
-    auto *button = new wxButton(this, ID_NEWBUTTON, "new button", wxPoint(10, 70), wxSize(80, 25));
+    auto *button = new wxButton(this, ID_NEW_BUTTON, "new button", wxPoint(10, 70), wxSize(80, 25));
     wxPoint pt(button->GetPosition());
     wxLogMessage("-> Position after inserting %d %d", pt.x, pt.y);
 }
@@ -682,11 +682,11 @@ void MyCanvas::OnAddButton(wxCommandEvent &WXUNUSED(event))
 void MyCanvas::OnDeleteButton(wxCommandEvent &WXUNUSED(event))
 {
     wxLogMessage("Deleting button inserted with \"Add button\"...");
-    wxWindow *win = FindWindow(ID_NEWBUTTON);
+    wxWindow *win = FindWindow(ID_NEW_BUTTON);
     if (win)
         win->Destroy();
     else
-        wxLogMessage("-> No window with id = ID_NEWBUTTON found.");
+        wxLogMessage("-> No window with id = ID_NEW_BUTTON found.");
 }
 
 void MyCanvas::OnMoveButton(wxCommandEvent &event)
@@ -876,7 +876,7 @@ void MyFrame::OnAbout(wxCommandEvent &WXUNUSED(event)) // NOLINT(*-convert-membe
                        "\n"
                        "Robert Roebling (c) 1998\n"
                        "Vadim Zeitlin (c) 2008\n"
-                       "Autoscrolling examples\n"
+                       "Auto-scrolling examples\n"
                        "Ron Lee (c) 2002\n"
                        "Auto-timed-scrolling example\n"
                        "Matt Gregory (c) 2003\n",
@@ -1249,7 +1249,7 @@ const char *MyAutoScrollingWindow::sm_testData =
     "that the capacity to do so is quite extraordinarily marvelous, a wholly "
     "uncommon accident, or, if we are still religiously inclined, a mercy from on "
     "high. Thus our vanity, our self-love, promotes the cult of the genius: for only "
-    "if we think of him as being very remote from us, as a miraculum, does he not "
+    "if we think of him as being very remote from us, as a miracle, does he not "
     "aggrieve us (even Goethe, who was without envy, called Shakespeare his star of "
     "the most distant heights [\"William! Stern der schonsten Ferne\": from Goethe's, "
     "\"Between Two Worlds\"]; in regard to which one might recall the lines: \"the "
@@ -1281,7 +1281,7 @@ const char *MyAutoScrollingWindow::sm_testData =
     "former and undervaluation of the latter is only a piece of childishness in the "
     "realm of reason. "
     "\n\n"
-    "163 The serious workman. Do not talk about giftedness, inborn talents! One can "
+    "163 The serious workman. Do not talk about gifted-ness, inborn talents! One can "
     "name great men of all kinds who were very little gifted. The acquired "
     "greatness, became \"geniuses\" (as we put it), through qualities the lack of "
     "which no one who knew what they were would boast of: they all possessed that "
@@ -1347,8 +1347,8 @@ const char *MyAutoScrollingWindow::sm_testData =
     "application to individual goals, great personal courage, then the good fortune "
     "to receive an upbringing which offered in the early years the finest teachers, "
     "models and methods. To be sure, when their goal is the production of the "
-    "greatest possible effect, unclarity with regard to oneself and that "
-    "semi-insanity superadded to it has always achieved much; for what has been "
+    "greatest possible effect, un-clarity with regard to oneself and that "
+    "semi-insanity super-added to it has always achieved much; for what has been "
     "admired and envied at all times has been that power in them by virtue of which "
     "they render men will-less and sweep them away into the delusion that the "
     "leaders they are following are supra-natural. Indeed, it elevates and inspires "
