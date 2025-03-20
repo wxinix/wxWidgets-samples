@@ -9,7 +9,7 @@ wxWidgets sample projects using CMake for Microsoft Windows platform.
 
 - Download [Windows 64-bit (x86-64) Development Files](https://www.wxwidgets.org/downloads/), via "Download Windows Binaries -> Visual Studio 2015/2017/2019/2022 -> 64-Bit (x86_64) -> Development Files"
     - Unzip and copy the subdirectory `vc14x_x64_dll` to `%WXWIDGETS_ROOT%/lib/`. This gives the library path as  `%WXWIDGETS_ROOT%/lib/vc14x_x64_dll`. Add this path to Windows System Environmental Variable `Path`.
-    - This library path is intended for development, including dlls for both debug and release builds, as well as static libs.
+    - This library path is intended for development, including dlls for both debug and release builds.
 - Download [Release Dlls](https://www.wxwidgets.org/downloads/), via "Download Windows Binaries -> Visual Studio 2015/2017/2019/2022 -> 64-Bit (x86_64) -> Release DLLs"
     - Unzip and copy the subdirectory `vc14x_x64_dll` to %`WXWIDGETS_ROOT%/distrib/`. This gives the library path as
    `%WXWIDGETS_ROOT%\distrib\vc14x_x64_dll`. Add this path to Windows System Environmental Variable `Path` too. 
