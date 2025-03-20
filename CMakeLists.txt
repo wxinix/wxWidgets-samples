@@ -6,6 +6,9 @@ project(wxWidgets-samples)
 # wxWidgets
 # Set wxWidgets_ROOT_DIR using environmental variable value.
 set(wxWidgets_ROOT_DIR $ENV{WXWIDGETS_ROOT})
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+add_link_options(/VERBOSE)
+
 find_package(wxWidgets REQUIRED COMPONENTS core base)
 include("${wxWidgets_USE_FILE}")
 
