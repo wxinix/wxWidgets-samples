@@ -8,7 +8,7 @@ set(wxCompilerPrefix vc14x)
 set(wxArchSuffix x64)
 set(wxToolkitPrefix msw)
 
-set(wxUSINGDLL false) #Change this to enable static static lib or DLL
+set(wxUSINGDLL true) #Change this to enable static static lib or DLL
 
 # Determine whether to use DLL or static libraries
 if (wxUSINGDLL)
