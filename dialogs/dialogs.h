@@ -25,7 +25,7 @@ of MSW, MAC and OS2
 #ifdef __WXUNIVERSAL__
     #define USE_WXUNIVERSAL 1
 #else
-    #define USE_WXUNIVERSAL 0
+    #define USE_WXUNIVERSAL 1
 #endif
 
 #ifdef WXUSINGDLL

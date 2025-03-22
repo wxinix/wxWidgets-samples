@@ -3,17 +3,33 @@ set(CMAKE_CXX_STANDARD 23)
 
 project(wxWidgets-samples)
 
-# wxWidgets
-# Set wxWidgets_ROOT_DIR using environmental variable value.
-set(wxWidgets_ROOT_DIR $ENV{WXWIDGETS_ROOT})
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-add_link_options(/VERBOSE)
+set(wxRootDir $ENV{WXWIN})
+set(wxCompilerPrefix vc14x)
+set(wxArchSuffix x64)
+set(wxToolkitPrefix msw)
 
-find_package(wxWidgets REQUIRED COMPONENTS core base)
-include("${wxWidgets_USE_FILE}")
+set(wxUSINGDLL false) #Change this to enable static static lib or DLL
 
-message("--wxWidget_USE_FILE-- ${wxWidgets_USE_FILE}")
-#message("--wxWidgets_LIBRARIES--  ${wxWidgets_LIBRARIES}")
+# Determine whether to use DLL or static libraries
+if (wxUSINGDLL)
+    set(wxLibTypeSuffix dll)
+    add_definitions(-DWXUSINGDLL)
+else()
+    set(wxLibTypeSuffix lib)
+endif()
+
+add_definitions(-D_UNICODE -D__WXMSW__ -DwxMSVC_VERSION_AUTO -DwxMSVC_VERSION_ABI_COMPAT -DwxUSE_GUI)
+
+set(wxWidgets_INCLUDE_DIRS
+        "${wxRootDir}/include/msvc"
+        "${wxRootDir}/include"
+)
+include_directories(${wxWidgets_INCLUDE_DIRS})
+
+set(wxWidgets_LIBRARIES_DIR
+        "${wxRootDir}/lib/${wxCompilerPrefix}_${wxArchSuffix}_${wxLibTypeSuffix}"
+)
+link_directories(${wxWidgets_LIBRARIES_DIR})
 
 #DPI AWARE
 set(wxUSE_DPI_AWARE_MANIFEST 2)

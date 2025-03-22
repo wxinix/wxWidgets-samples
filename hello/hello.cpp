@@ -84,8 +84,6 @@ bool MyApp::OnInit()
     return frame->Show(true);
 }
 
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "VirtualCallInCtorOrDtor"
 /*
  * In the constructor of the main window (or later on), we create a menu with
  * our menu items, as well as a status bar to be shown at the bottom of
@@ -142,7 +140,6 @@ MyFrame::MyFrame() : wxFrame(nullptr, wxID_ANY, "Hello World", wxPoint(50, 50), 
 
     // Center();
 }
-#pragma clang diagnostic pop
 
 void MyFrame::OnExit(wxCommandEvent &)
 {
