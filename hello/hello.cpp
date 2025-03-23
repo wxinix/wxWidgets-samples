@@ -11,7 +11,7 @@
  * By overriding wxApp's OnInit() virtual method the program can be
  * initialized, e.g. by creating a new main window.
  */
-class MyApp : public wxApp
+class MyApp final : public wxApp
 {
 public:
     bool OnInit() override;
@@ -37,7 +37,7 @@ public:
  *
  * Notice that these handlers don't need to be virtual or public.
  */
-class MyFrame : public wxFrame
+class MyFrame final : public wxFrame
 {
 public:
     MyFrame();
@@ -46,6 +46,8 @@ private:
     void OnHello(wxCommandEvent &event);
     void OnExit(wxCommandEvent &event);
     void OnAbout(wxCommandEvent &event);
+
+    wxDateTime now_;
 };
 
 /*
@@ -64,7 +66,7 @@ enum
  * the wxIMPLEMENT_APP() macro, which creates an application instance of the
  * specified class and starts running the GUI event loop.
  */
-wxIMPLEMENT_APP(MyApp); // NOLINT(*-pro-type-static-cast-downcast)
+wxIMPLEMENT_APP(MyApp);// NOLINT(*-pro-type-static-cast-downcast)
 
 /*
  * wxApp::OnInit() is called upon startup and should be used to initialize the
@@ -78,9 +80,14 @@ wxIMPLEMENT_APP(MyApp); // NOLINT(*-pro-type-static-cast-downcast)
 
 bool MyApp::OnInit()
 {
+    //wxLog::SetActiveTarget(new wxLogStderr(stderr)); // Logs to stderr
+    //wxLog::SetActiveTarget(new wxLogWindow(nullptr, "Log Output", true, false)); // Opens a log window
+    //wxLog::SetActiveTarget(new wxLogNull()); // Disables logging
+
     wxApp::SetUseBestVisual(true);
     auto *frame = new MyFrame();
-    frame->SetClientSize(frame->FromDIP(wxSize(400, 300)));
+    const auto size = frame->FromDIP(wxSize(400, 300));
+    frame->SetClientSize(size);
     return frame->Show(true);
 }
 
@@ -91,8 +98,7 @@ bool MyApp::OnInit()
  */
 MyFrame::MyFrame() : wxFrame(nullptr, wxID_ANY, "Hello World", wxPoint(50, 50), wxSize(450, 340))
 {
-
-  /*
+    /*
    * Notice that we don't need to specify the labels for the standard menu
    * items wxID_ABOUT and wxID_EXIT — they will be given standard (even correctly translated)
    * labels and standard accelerators correct for the current platform, making
@@ -113,32 +119,34 @@ MyFrame::MyFrame() : wxFrame(nullptr, wxID_ANY, "Hello World", wxPoint(50, 50), 
     menuBar->Append(menuFile, "&File");
     menuBar->Append(menuHelp, "&Help");
 
-    SetMenuBar(menuBar);
+    SetMenuBar(menuBar);//NOLINT
+    CreateStatusBar();  //NOLINT
 
-    CreateStatusBar();
-    SetStatusText("Welcome to wxWidgets!");
+    SetStatusText("Welcome to wxWidgets!");//NOLINT
 
-   /*
-   We also have to connect our event handlers to the events we want to handle in them.
-   We do this by calling Bind() to send all the menu events (identified by wxEVT_MENU event type)
-   with the specified ID to the given function. The parameters we pass to Bind() are
+    /*
+      We also have to connect our event handlers to the events we want to handle in them.
+      We do this by calling Bind() to send all the menu events (identified by wxEVT_MENU event type)
+      with the specified ID to the given function. The parameters we pass to Bind() are
 
-   1. The event type, e.g. wxEVT_MENU, wxEVT_BUTTON, wxEVT_SIZE, or one of many
-      other events used by wxWidgets.
-   2. A Pointer to the method to call, and the object to call it on. In this case,
-      we just call our own function, and pass this pointer for the object itself.
-      We could instead call the method of another object, or a non-member function — in fact,
-      any object that can be called with a wxCommandEvent, can be used here.
-   3. An optional identifier, allowing us to select just some events of wxEVT_MENU type,
-      namely those from the menu item with the given ID, instead of handling all of them in
-      the provided handler. This is mainly useful with menu items and rarely with
-      other kinds of events.
-   */
+      1. The event type, e.g. wxEVT_MENU, wxEVT_BUTTON, wxEVT_SIZE, or one of many
+         other events used by wxWidgets.
+      2. A Pointer to the method to call, and the object to call it on. In this case,
+         we just call our own function, and pass this pointer for the object itself.
+         We could instead call the method of another object, or a non-member function — in fact,
+         any object that can be called with a wxCommandEvent, can be used here.
+      3. An optional identifier, allowing us to select just some events of wxEVT_MENU type,
+         namely those from the menu item with the given ID, instead of handling all of them in
+         the provided handler. This is mainly useful with menu items and rarely with
+         other kinds of events.
+  */
     Bind(wxEVT_MENU, &MyFrame::OnHello, this, ID_Hello);
     Bind(wxEVT_MENU, &MyFrame::OnAbout, this, wxID_ABOUT);
     Bind(wxEVT_MENU, &MyFrame::OnExit, this, wxID_EXIT);
 
-    // Center();
+    Center();
+
+    now_ = wxDateTime::Now();
 }
 
 void MyFrame::OnExit(wxCommandEvent &)
@@ -146,13 +154,16 @@ void MyFrame::OnExit(wxCommandEvent &)
     Close(true);
 }
 
-void MyFrame::OnAbout(wxCommandEvent &) // NOLINT(*-convert-member-functions-to-static)
+void MyFrame::OnAbout(wxCommandEvent &)//NOLINT
 {
-    wxMessageBox("This is a wxWidgets' Hello world sample",
-                 "About Hello World", wxOK | wxICON_INFORMATION);
+    const auto message = wxString::Format("This is a wxWidgets' Hello world sample created at %s", now_.Format("%Y-%m-%d %H:%M:%S"));
+    wxMessageBox(message,
+                 "About Hello World",
+                 wxOK | wxICON_INFORMATION);
 }
 
-void MyFrame::OnHello(wxCommandEvent &) // NOLINT(*-convert-member-functions-to-static)
+void MyFrame::OnHello(wxCommandEvent &)//NOLINT
 {
-    wxLogMessage("Hello world from wxWidgets!");
+    const auto message = wxString::Format("Hello World created by wxWidgets at %s", now_.Format("%Y-%m-%d %H:%M:%S"));
+    wxLogMessage(message);
 }
