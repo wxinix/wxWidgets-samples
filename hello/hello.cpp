@@ -43,9 +43,9 @@ public:
     MyFrame();
 
 private:
-    void OnHello(wxCommandEvent &event);
-    void OnExit(wxCommandEvent &event);
-    void OnAbout(wxCommandEvent &event);
+    void OnHello(wxCommandEvent &event);// Pay attention to "wxCommandEvent"
+    void OnExit(wxCommandEvent &event); // Pay attention to "wxCommandEvent"
+    void OnAbout(wxCommandEvent &event);// Pay attention to "wxCommandEvent"
 
     wxDateTime now_;
 };
@@ -95,6 +95,7 @@ bool MyApp::OnInit()
  * In the constructor of the main window (or later on), we create a menu with
  * our menu items, as well as a status bar to be shown at the bottom of
  * the main window. Both have to be bound to the frame with respective calls.
+ * wxID_ANY is for automatically assign the ID.
  */
 MyFrame::MyFrame() : wxFrame(nullptr, wxID_ANY, "Hello World", wxPoint(50, 50), wxSize(450, 340))
 {

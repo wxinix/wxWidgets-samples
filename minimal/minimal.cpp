@@ -8,18 +8,10 @@
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
 
-// ============================================================================
-// declarations
-// ============================================================================
-
-// ----------------------------------------------------------------------------
-// headers
-// ----------------------------------------------------------------------------
-
 // For compilers that support pre-compilation, includes "wx/wx.h".
 #include "wx/wxprec.h"
 
-// for all others, include the necessary headers (this file is usually all you
+// For all others, include the necessary headers (this file is usually all you
 // need because it includes almost all "standard" wxWidgets headers)
 #ifndef WX_PRECOMP
 #include "wx/wx.h"
@@ -29,18 +21,14 @@
 // resources
 // ----------------------------------------------------------------------------
 
-// the application icon (under Windows it is in resources and even
+// The application icon (under Windows it is in resources and even
 // though we could still include the XPM here it would be unused)
 #ifndef wxHAS_IMAGES_IN_RESOURCES
 #include "../sample.xpm"
 #endif
 
-// ----------------------------------------------------------------------------
-// private classes
-// ----------------------------------------------------------------------------
-
 // Define a new application type, each program should derive a class from wxApp
-class MyApp : public wxApp
+class MyApp final : public wxApp
 {
 public:
     // override base class virtuals
@@ -53,10 +41,9 @@ public:
 };
 
 // Define a new frame type: this is going to be our main frame
-class MyFrame : public wxFrame
+class MyFrame final : public wxFrame
 {
 public:
-    // ctor(s)
     explicit MyFrame(const wxString &title);
 
 private:
@@ -105,7 +92,7 @@ bool MyApp::OnInit()
         return false;
 
     // create the main application window
-    auto frame = new MyFrame("Minimal wxWidgets App");
+    const auto frame = new MyFrame("Minimal wxWidgets App");
 
     // and show it (the frames, unlike simple controls, are not shown when
     // created initially)
@@ -130,7 +117,7 @@ MyFrame::MyFrame(const wxString &title) : wxFrame(nullptr, wxID_ANY, title)
 
 #if wxUSE_MENUBAR
     // File menu
-    auto fileMenu = new wxMenu;
+    const auto fileMenu = new wxMenu;
     fileMenu->Append(Minimal_Quit, "E&xit\tAlt-X", "Quit this program");
 
     // About menu
@@ -143,21 +130,21 @@ MyFrame::MyFrame(const wxString &title) : wxFrame(nullptr, wxID_ANY, title)
     menuBar->Append(helpMenu, "&Help");
 
     // Attach this menu bar to the frame
-    SetMenuBar(menuBar);
-#else // !wxUSE_MENUBAR
+    SetMenuBar(menuBar);// NOLINT
+#else                   // !wxUSE_MENUBAR
     // If menus are not available add a button to access the about box
     wxSizer *sizer = new wxBoxSizer(wxHORIZONTAL);
     wxButton *aboutBtn = new wxButton(this, wxID_ANY, "About...");
     aboutBtn->Bind(wxEVT_BUTTON, &MyFrame::OnAbout, this);
     sizer->Add(aboutBtn, wxSizerFlags().Center());
     SetSizer(sizer);
-#endif// wxUSE_MENUBAR/!wxUSE_MENUBAR
+#endif                  // wxUSE_MENUBAR/!wxUSE_MENUBAR
 
 #if wxUSE_STATUSBAR
     // create a status bar just for fun (by default with 1 pane only)
-    CreateStatusBar(2);
-    SetStatusText("Welcome to wxWidgets!");
-#endif// wxUSE_STATUSBAR
+    CreateStatusBar(2);                    // NOLINT
+    SetStatusText("Welcome to wxWidgets!");//NOLINT
+#endif                                     // wxUSE_STATUSBAR
 
     Bind(wxEVT_MENU, &MyFrame::OnAbout, this, Minimal_About);
     Bind(wxEVT_MENU, &MyFrame::OnQuit, this, Minimal_Quit);
