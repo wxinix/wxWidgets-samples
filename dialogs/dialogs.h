@@ -13,8 +13,8 @@
 This sample shows how to use the common dialogs available from wxWidgets.
 It also shows that generic implementations of common dialogs can be exchanged
 with native dialogs and can coexist in one application. The need for generic
-dialogs addition is recognized thanks to setup of below USE_*** setting. Their
-combinations reflects conditions of makefiles and project files to avoid unresolved
+dialogs addition is recognized thanks to set up of below USE_*** setting. Their
+combinations reflect conditions of makefiles and project files to avoid unresolved
 references during linking. For now some generic dialogs are added in static builds
 of MSW, MAC and OS2
 */
@@ -62,21 +62,23 @@ of MSW, MAC and OS2
 
 #define USE_COLOURDLG_GENERIC \
     ((USE_WXMSW || USE_WXMAC) && USE_GENERIC_DIALOGS && wxUSE_COLOURDLG)
+
 #define USE_DIRDLG_GENERIC \
     ((USE_WXMSW || USE_WXMAC) && USE_GENERIC_DIALOGS && wxUSE_DIRDLG)
+
 #define USE_FILEDLG_GENERIC \
     ((USE_WXMSW || USE_WXMAC) && USE_GENERIC_DIALOGS  && wxUSE_FILEDLG)
+
 #define USE_FONTDLG_GENERIC \
     ((USE_WXMSW || USE_WXMACFONTDLG) && USE_GENERIC_DIALOGS && wxUSE_FONTDLG)
 
 // Turn USE_MODAL_PRESENTATION to 0 if there is any reason for not presenting difference
-// between modal and modeless dialogs (ie. not implemented it in your port yet)
+// between modal and modeless dialogs (i.e. not implemented it in your port yet)
 #if !wxUSE_BOOKCTRL
     #define USE_MODAL_PRESENTATION 0
 #else
     #define USE_MODAL_PRESENTATION 1
 #endif
-
 
 // Turn USE_SETTINGS_DIALOG to 0 if supported
 #if wxUSE_BOOKCTRL
@@ -570,20 +572,20 @@ private:
     wxDECLARE_EVENT_TABLE();
 };
 
-class MyCanvas: public wxScrolledWindow
+class MyCanvas final : public wxScrolledWindow
 {
 public:
-    MyCanvas(wxWindow *parent) : wxScrolledWindow(parent, wxID_ANY)
+    explicit MyCanvas(wxWindow *parent) : wxScrolledWindow(parent, wxID_ANY)
     {
-        SetForegroundColour(*wxBLACK);
-        SetBackgroundColour(*wxWHITE);
-        SetFont(*wxNORMAL_FONT);
-    }
+        wxWindowBase::SetForegroundColour(*wxBLACK);
+        wxWindowBase::SetBackgroundColour(*wxWHITE);
+        wxWindow::SetFont(*wxNORMAL_FONT);
+
+        Bind(wxEVT_PAINT, &MyCanvas::OnPaintMyCanvas, this);
+     }
 
 private:
-    void OnPaint(wxPaintEvent& event);
-
-    wxDECLARE_EVENT_TABLE();
+    void OnPaintMyCanvas(wxPaintEvent& event);
 };
 
 

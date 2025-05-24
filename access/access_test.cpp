@@ -80,7 +80,7 @@ public:
 #if wxUSE_ACCESSIBILITY
 
 // Define a new frame type: this is going to be our main frame
-class MyFrame : public wxFrame
+class MyFrame final : public wxFrame
 {
 public:
     // ctor(s)
@@ -148,7 +148,7 @@ wxEND_EVENT_TABLE()
     // static object for many reasons) and also declares the accessor function
     // wxGetApp() which will return the reference of the right type (i.e. MyApp and
     // not wxApp)
- wxIMPLEMENT_APP(MyApp);
+    wxIMPLEMENT_APP(MyApp);//NOLINT
 
 // ============================================================================
 // implementation
@@ -191,7 +191,7 @@ bool MyApp::OnInit()
 
 #if wxUSE_ACCESSIBILITY
 
-class FrameAccessible : public wxWindowAccessible
+class FrameAccessible final : public wxWindowAccessible
 {
 public:
     explicit FrameAccessible(wxWindow *win) : wxWindowAccessible(win)
@@ -208,7 +208,7 @@ public:
     }
 };
 
-class ScrolledWindowAccessible : public wxWindowAccessible
+class ScrolledWindowAccessible final : public wxWindowAccessible
 {
 public:
     explicit ScrolledWindowAccessible(wxWindow *win) : wxWindowAccessible(win)
@@ -314,10 +314,8 @@ public:
 // main frame
 // ----------------------------------------------------------------------------
 
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "VirtualCallInCtorOrDtor"
 // frame constructor
-MyFrame::MyFrame(const wxString &title, const wxPoint &pos, const wxSize &size, long style)
+MyFrame::MyFrame(const wxString &title, const wxPoint &pos, const wxSize &size, const long style)
     : wxFrame(nullptr, wxID_ANY, title, pos, size, style)
 {
     m_textCtrl = nullptr;
@@ -345,8 +343,8 @@ MyFrame::MyFrame(const wxString &title, const wxPoint &pos, const wxSize &size, 
     menuBar->Append(helpMenu, "&Help");
 
     // ... and attach this menu bar to the frame
-    SetMenuBar(menuBar);
-#endif// wxUSE_MENUS
+    SetMenuBar(menuBar);//NOLINT
+#endif                  // wxUSE_MENUS
 
 #if 0 // wxUSE_STATUSBAR
   // create a status bar just for fun (by default with 1 pane only)
@@ -377,7 +375,6 @@ MyFrame::MyFrame(const wxString &title, const wxPoint &pos, const wxSize &size, 
   scrolledWindow->SetAccessible(new ScrolledWindowAccessible(scrolledWindow));
 #endif
 }
-#pragma clang diagnostic pop
 
 // event handlers
 
@@ -401,7 +398,7 @@ void MyFrame::OnQuery(wxCommandEvent &WXUNUSED(event))
 {
     m_textCtrl->Clear();
     IAccessible *accessibleFrame = nullptr;
-    if (S_OK != AccessibleObjectFromWindow((HWND)GetHWND(), (DWORD)OBJID_CLIENT, IID_IAccessible, (void **)&accessibleFrame)) {
+    if (S_OK != AccessibleObjectFromWindow((HWND)GetHWND(), (DWORD)OBJID_CLIENT, IID_IAccessible, (void **)&accessibleFrame)) {//NOLINT
         Log("Could not get object.");
         return;
     }
@@ -434,7 +431,7 @@ void MyFrame::OnQuery(wxCommandEvent &WXUNUSED(event))
             for (i = 0; i < childCount; i++) {
                 IAccessible *childAccessible = nullptr;
                 if (var[i].pdispVal) {
-                    if (var[i].pdispVal->QueryInterface(IID_IAccessible, (LPVOID *)&childAccessible) == S_OK) {
+                    if (var[i].pdispVal->QueryInterface(IID_IAccessible, (LPVOID *)&childAccessible) == S_OK) {//NOLINT
                         var[i].pdispVal->Release();
 
                         wxString name, role;
@@ -458,7 +455,7 @@ void MyFrame::OnQuery(wxCommandEvent &WXUNUSED(event))
 }
 
 // Log messages to the text control
-void MyFrame::Log(const wxString &text)
+void MyFrame::Log(const wxString &text)//NOLINT
 {
     if (m_textCtrl) {
         wxString text2(text);
@@ -470,7 +467,7 @@ void MyFrame::Log(const wxString &text)
 }
 
 // Recursively give information about an object
-void MyFrame::LogObject(int indent, IAccessible *obj) // NOLINT(*-no-recursion)
+void MyFrame::LogObject(int indent, IAccessible *obj)// NOLINT(*-no-recursion)
 {
     wxString name, role;
     if (indent == 0) {
@@ -485,7 +482,7 @@ void MyFrame::LogObject(int indent, IAccessible *obj) // NOLINT(*-no-recursion)
     long childCount = 0;
     if (S_OK == obj->get_accChildCount(&childCount)) {
         wxString str;
-        str.Printf("There are %d children.", (int)childCount);
+        str.Printf("There are %d children.", (int)childCount);//NOLINT
         str.Pad(indent, ' ', false);
         Log(str);
         Log("");
@@ -512,7 +509,7 @@ void MyFrame::LogObject(int indent, IAccessible *obj) // NOLINT(*-no-recursion)
             str.Pad(indent + 4, ' ', false);
             Log(str);
 
-            if (pDispatch->QueryInterface(IID_IAccessible, (LPVOID *)&childObject) == S_OK) {
+            if (pDispatch->QueryInterface(IID_IAccessible, (LPVOID *)&childObject) == S_OK) {//NOLINT
                 LogObject(indent + 4, childObject);
                 childObject->Release();
             }
@@ -527,7 +524,7 @@ void MyFrame::LogObject(int indent, IAccessible *obj) // NOLINT(*-no-recursion)
 }
 
 // Get info for a child (id > 0) or object (id == 0)
-void MyFrame::GetInfo(IAccessible *accessible, int id, wxString &name, wxString &role) // NOLINT(*-convert-member-functions-to-static)
+void MyFrame::GetInfo(IAccessible *accessible, int id, wxString &name, wxString &role)// NOLINT
 {
     VARIANT var;
     VariantInit(&var);
@@ -570,7 +567,7 @@ wxAccStatus SplitterWindowAccessible::GetName(int childId, wxString *name)
         *name = "Splitter window";
         return wxACC_OK;
     }
-    wxSplitterWindow *splitter = wxDynamicCast(GetWindow(), wxSplitterWindow);
+    wxSplitterWindow *splitter = wxDynamicCast(GetWindow(), wxSplitterWindow);//NOLINT
     if (splitter) {
         if (splitter->IsSplit()) {
             // Two windows, and the sash.
@@ -590,7 +587,7 @@ wxAccStatus SplitterWindowAccessible::GetName(int childId, wxString *name)
 // representing the child element, starting from 1.
 wxAccStatus SplitterWindowAccessible::HitTest(const wxPoint &pt, int *childId, wxAccessible **WXUNUSED(childObject))
 {
-    wxSplitterWindow *splitter = wxDynamicCast(GetWindow(), wxSplitterWindow);
+    wxSplitterWindow *splitter = wxDynamicCast(GetWindow(), wxSplitterWindow);//NOLINT
     if (splitter) {
         if (splitter->IsSplit()) {
             wxPoint clientPt = splitter->ScreenToClient(pt);
@@ -608,7 +605,7 @@ wxAccStatus SplitterWindowAccessible::HitTest(const wxPoint &pt, int *childId, w
 // Returns the rectangle for this object (id = 0) or a child element (id > 0).
 wxAccStatus SplitterWindowAccessible::GetLocation(wxRect &rect, int elementId)
 {
-    wxSplitterWindow *splitter = wxDynamicCast(GetWindow(), wxSplitterWindow);
+    wxSplitterWindow *splitter = wxDynamicCast(GetWindow(), wxSplitterWindow);//NOLINT
     if (splitter && elementId == 2 && splitter->IsSplit()) {
         wxSize clientSize = splitter->GetClientSize();
         if (splitter->GetSplitMode() == wxSPLIT_VERTICAL) {
@@ -634,7 +631,7 @@ wxAccStatus SplitterWindowAccessible::GetLocation(wxRect &rect, int elementId)
 wxAccStatus SplitterWindowAccessible::Navigate(wxNavDir navDir, int fromId,
                                                int *toId, wxAccessible **toObject)
 {
-    wxSplitterWindow *splitter = wxDynamicCast(GetWindow(), wxSplitterWindow);
+    wxSplitterWindow *splitter = wxDynamicCast(GetWindow(), wxSplitterWindow);//NOLINT
     if (splitter && splitter->IsSplit()) {
         switch (navDir) {
             case wxNAVDIR_DOWN: {
@@ -655,7 +652,7 @@ wxAccStatus SplitterWindowAccessible::Navigate(wxNavDir navDir, int fromId,
         break;
 #endif
             }
-            case wxNAVDIR_FIRSTCHILD: { // NOLINT(*-branch-clone)
+            case wxNAVDIR_FIRSTCHILD: {// NOLINT(*-branch-clone)
                 if (fromId == 2)
                     return wxACC_FALSE;
             } break;
@@ -766,7 +763,7 @@ wxAccStatus SplitterWindowAccessible::Navigate(wxNavDir navDir, int fromId,
 // Gets the number of children.
 wxAccStatus SplitterWindowAccessible::GetChildCount(int *childCount)
 {
-    wxSplitterWindow *splitter = wxDynamicCast(GetWindow(), wxSplitterWindow);
+    wxSplitterWindow *splitter = wxDynamicCast(GetWindow(), wxSplitterWindow);//NOLINT
     if (splitter) {
         if (splitter->IsSplit()) {
             // Two windows, and the sash.
@@ -798,7 +795,7 @@ wxAccStatus SplitterWindowAccessible::GetChild(int childId, wxAccessible **child
         return wxACC_OK;
     }
 
-    wxSplitterWindow *splitter = wxDynamicCast(GetWindow(), wxSplitterWindow);
+    wxSplitterWindow *splitter = wxDynamicCast(GetWindow(), wxSplitterWindow);//NOLINT
     if (splitter) {
         if (splitter->IsSplit()) {
             // Two windows, and the sash.
@@ -855,7 +852,7 @@ wxAccStatus SplitterWindowAccessible::DoDefaultAction(int WXUNUSED(childId))
 // a document has a default action of "Press" rather than "Prints the current document."
 wxAccStatus SplitterWindowAccessible::GetDefaultAction(int childId, wxString *WXUNUSED(actionName))
 {
-    wxSplitterWindow *splitter = wxDynamicCast(GetWindow(), wxSplitterWindow);
+    wxSplitterWindow *splitter = wxDynamicCast(GetWindow(), wxSplitterWindow);//NOLINT
     if (splitter && splitter->IsSplit() && childId == 2) {
         // No default action for the splitter.
         return wxACC_FALSE;
@@ -867,7 +864,7 @@ wxAccStatus SplitterWindowAccessible::GetDefaultAction(int childId, wxString *WX
 // Returns the description for this object or a child.
 wxAccStatus SplitterWindowAccessible::GetDescription(int childId, wxString *description)
 {
-    wxSplitterWindow *splitter = wxDynamicCast(GetWindow(), wxSplitterWindow);
+    wxSplitterWindow *splitter = wxDynamicCast(GetWindow(), wxSplitterWindow);//NOLINT
     if (splitter) {
         if (splitter->IsSplit()) {
             if (childId == 2) {
@@ -883,7 +880,7 @@ wxAccStatus SplitterWindowAccessible::GetDescription(int childId, wxString *desc
 // Returns help text for this object or a child, similar to tooltip text.
 wxAccStatus SplitterWindowAccessible::GetHelpText(int childId, wxString *helpText)
 {
-    wxSplitterWindow *splitter = wxDynamicCast(GetWindow(), wxSplitterWindow);
+    wxSplitterWindow *splitter = wxDynamicCast(GetWindow(), wxSplitterWindow);//NOLINT
     if (splitter) {
         if (splitter->IsSplit()) {
             if (childId == 2) {
@@ -900,7 +897,7 @@ wxAccStatus SplitterWindowAccessible::GetHelpText(int childId, wxString *helpTex
 // Return e.g. ALT+K
 wxAccStatus SplitterWindowAccessible::GetKeyboardShortcut(int childId, wxString *WXUNUSED(shortcut))
 {
-    wxSplitterWindow *splitter = wxDynamicCast(GetWindow(), wxSplitterWindow);
+    wxSplitterWindow *splitter = wxDynamicCast(GetWindow(), wxSplitterWindow);//NOLINT
     if (splitter && splitter->IsSplit() && childId == 2) {
         // No keyboard shortcut for the splitter.
         return wxACC_FALSE;
@@ -912,7 +909,7 @@ wxAccStatus SplitterWindowAccessible::GetKeyboardShortcut(int childId, wxString 
 // Returns a role constant.
 wxAccStatus SplitterWindowAccessible::GetRole(int childId, wxAccRole *role)
 {
-    wxSplitterWindow *splitter = wxDynamicCast(GetWindow(), wxSplitterWindow);
+    wxSplitterWindow *splitter = wxDynamicCast(GetWindow(), wxSplitterWindow);//NOLINT
     if (splitter) {
         if (splitter->IsSplit()) {
             if (childId == 2) {
@@ -928,7 +925,7 @@ wxAccStatus SplitterWindowAccessible::GetRole(int childId, wxAccRole *role)
 // Returns a state constant.
 wxAccStatus SplitterWindowAccessible::GetState(int childId, long *state)
 {
-    wxSplitterWindow *splitter = wxDynamicCast(GetWindow(), wxSplitterWindow);
+    wxSplitterWindow *splitter = wxDynamicCast(GetWindow(), wxSplitterWindow);//NOLINT
     if (splitter && splitter->IsSplit() && childId == 2) {
         // No particular state. Not sure what would be appropriate here.
         *state = wxACC_STATE_SYSTEM_UNAVAILABLE;
@@ -942,7 +939,7 @@ wxAccStatus SplitterWindowAccessible::GetState(int childId, long *state)
 // or child.
 wxAccStatus SplitterWindowAccessible::GetValue(int childId, wxString *strValue)
 {
-    wxSplitterWindow *splitter = wxDynamicCast(GetWindow(), wxSplitterWindow);
+    wxSplitterWindow *splitter = wxDynamicCast(GetWindow(), wxSplitterWindow);//NOLINT
     if (splitter && splitter->IsSplit() && childId == 2) {
         // The sash position is the value.
         wxString pos;
@@ -958,7 +955,7 @@ wxAccStatus SplitterWindowAccessible::GetValue(int childId, wxString *strValue)
 // Selects the object or child.
 wxAccStatus SplitterWindowAccessible::Select(int childId, wxAccSelectionFlags WXUNUSED(selectFlags))
 {
-    wxSplitterWindow *splitter = wxDynamicCast(GetWindow(), wxSplitterWindow);
+    wxSplitterWindow *splitter = wxDynamicCast(GetWindow(), wxSplitterWindow);//NOLINT
     if (splitter && splitter->IsSplit() && childId == 2) {
         // Can't select the sash.
         return wxACC_FALSE;

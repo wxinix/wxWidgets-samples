@@ -5,20 +5,20 @@ wxWidgets sample projects using CMake for Microsoft Windows platform.
 
 - Download [wxWidgets source](https://www.wxwidgets.org/downloads/).
     - Unzip, and copy the entire unzipped folder to `C:/DevLibs/` or whatever parent folder appropriate. The full path to wxWidgets source should be like `C:/DevLibs/wxWidgets-3.2.2.1` in the case that the downloaded version is `3.2.2.1` and the unzipped folder name is `wxWidgets-3.2.2.1`.
-    - Create a Windows System Environmental Variable `WXWIDGETS_ROOT`, and set its value to wxWidgets source path, for example, `C:/DevLibs/wxWidgets-3.2.2.1`.
+    - Create a Windows System Environmental Variable `WXWIN`, and set its value to wxWidgets source path, for example, `C:/DevLibs/wxWidgets-3.2.2.1`.
 
 - Download [Windows 64-bit (x86-64) Development Files](https://www.wxwidgets.org/downloads/), via "Download Windows Binaries -> Visual Studio 2015/2017/2019/2022 -> 64-Bit (x86_64) -> Development Files"
-    - Unzip and copy the subdirectory `vc14x_x64_dll` to `%WXWIDGETS_ROOT%/lib/`. This gives the library path as  `%WXWIDGETS_ROOT%/lib/vc14x_x64_dll`. Add this path to Windows System Environmental Variable `Path`.
+    - Unzip and copy the subdirectory `vc14x_x64_dll` to `%WXWIN%/lib/`. This gives the library path as  `%WXWIN%/lib/vc14x_x64_dll`. Add this path to Windows System Environmental Variable `Path`.
     - This library path is intended for development, including dlls for both debug and release builds.
 - Download [Release Dlls](https://www.wxwidgets.org/downloads/), via "Download Windows Binaries -> Visual Studio 2015/2017/2019/2022 -> 64-Bit (x86_64) -> Release DLLs"
-    - Unzip and copy the subdirectory `vc14x_x64_dll` to %`WXWIDGETS_ROOT%/distrib/`. This gives the library path as
-   `%WXWIDGETS_ROOT%\distrib\vc14x_x64_dll`. Add this path to Windows System Environmental Variable `Path` too. 
+    - Unzip and copy the subdirectory `vc14x_x64_dll` to %`WXWIN%/distrib/`. This gives the library path as
+   `%WXWIN%\distrib\vc14x_x64_dll`. Add this path to Windows System Environmental Variable `Path` too. 
     - This library path is intended for distribution, including dlls for release build only.
 
 
 ## Configure CMakeLists
 
-The CMakeLists for each project should be like the following template. Remember to add `WIN32` to `add_executable`, and to set `wxWidgets_ROOT_DIR`.
+The CMakeLists for each project should be like the following template. Remember to add `WIN32` to `add_executable`, and to set `wxRootDir`.
 
 ```cmake
 cmake_minimum_required(VERSION 3.24)
@@ -34,7 +34,7 @@ set(SOURCE_FILES main.cpp)
 add_executable(${PROJECT_NAME} WIN32 ${SOURCE_FILES})
 
 # wxWidgets
-set(wxWidgets_ROOT_DIR $ENV{WXWIDGETS_ROOT})
+set(wxRootDir $ENV{WXWIN})
 find_package(wxWidgets REQUIRED COMPONENTS core base)
 include("${wxWidgets_USE_FILE}")
 target_link_libraries(${PROJECT_NAME} ${wxWidgets_LIBRARIES})
@@ -80,12 +80,12 @@ if (WIN32)
     if(wxUSE_DPI_AWARE_MANIFEST EQUAL 1)
         add_custom_command(TARGET ${PROJECT_NAME}  POST_BUILD
                 COMMAND mt.exe
-                -manifest ${wxWidgets_ROOT_DIR}/include/wx/msw/wx_dpi_aware.manifest
+                -manifest ${wxRootDir}/include/wx/msw/wx_dpi_aware.manifest
                 -outputresource:$<TARGET_FILE:${PROJECT_NAME}>\;\#1)
     elseif(wxUSE_DPI_AWARE_MANIFEST EQUAL 2)
         add_custom_command(TARGET ${PROJECT_NAME}  POST_BUILD
                 COMMAND mt.exe
-                -manifest ${wxWidgets_ROOT_DIR}/include/wx/msw/wx_dpi_aware_pmv2.manifest
+                -manifest ${wxRootDir}/include/wx/msw/wx_dpi_aware_pmv2.manifest
                 -outputresource:$<TARGET_FILE:${PROJECT_NAME}>\;\#1)
     endif()
 endif()

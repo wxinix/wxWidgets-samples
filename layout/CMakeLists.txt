@@ -1,6 +1,5 @@
 project(layout)
 set(SRC_FILES
-        expt.cpp
         layout.cpp)
 
 add_executable(${PROJECT_NAME} WIN32 ${SRC_FILES})

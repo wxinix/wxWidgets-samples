@@ -9,7 +9,7 @@
 // Licence:     wxWindows licence
 /////////////////////////////////////////////////////////////////////////////
 
-// For compilers that support precompilation, includes "wx/wx.h".
+// For compilers that support pre-compilation, includes "wx/wx.h".
 #include "wx/wxprec.h"
 
 
@@ -132,13 +132,7 @@
     #include "wx/generic/fontdlgg.h"
 #endif // USE_FONTDLG_GENERIC
 
-wxIMPLEMENT_APP(MyApp);
-
-wxBEGIN_EVENT_TABLE(MyCanvas, wxScrolledWindow)
-    EVT_PAINT(MyCanvas::OnPaint)
-wxEND_EVENT_TABLE()
-
-
+wxIMPLEMENT_APP(MyApp);//NOLINT
 
 wxBEGIN_EVENT_TABLE(MyFrame, wxFrame)
 #if wxUSE_MSGDLG
@@ -3691,7 +3685,7 @@ void MyFrame::OnFindDialog(wxFindDialogEvent& event)
 // MyCanvas
 // ----------------------------------------------------------------------------
 
-void MyCanvas::OnPaint(wxPaintEvent& WXUNUSED(event) )
+void MyCanvas::OnPaintMyCanvas(wxPaintEvent& WXUNUSED(event) )
 {
     wxPaintDC dc(this);
     dc.SetBackgroundMode(wxBRUSHSTYLE_TRANSPARENT);
